@@ -2,6 +2,7 @@
 
 * Allez dans le dossier `degel-mobile`
 * executez `exp start`
+* sur iphone : dans un autre terminal dans le dossier `degel-mobile` exécutez `exp send -s 9991112222`
 
 # Documentation avec expo
 
