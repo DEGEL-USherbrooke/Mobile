@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, AsyncStorage } from 'react-native';
 import SettingsList from 'react-native-settings-list';
 
 export default class SettingsScreen extends React.Component {
@@ -38,6 +38,18 @@ export default class SettingsScreen extends React.Component {
                 hasSwitch={true}
                 hasNavArrow={false}
               />
+              <SettingsList.Item
+                //icon={<Image style={styles.imageStyle} source={require('./images/wifi.png')}/>}
+                title='Sign out'
+				titleStyle={{color:'red', textAlign: 'center'}}
+                titleInfoStyle={styles.titleInfoStyle}
+				hasNavArrow={false}
+				onPress={ async () => {
+					await AsyncStorage.removeItem('userToken');
+					this.props.navigation.navigate('AuthLoading');
+					}
+				}
+              />
             </SettingsList>
           </View>
         </View>
@@ -50,7 +62,7 @@ export default class SettingsScreen extends React.Component {
       this.setState({switchNotificationValue: value});
     }
   }
-
+  
   const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -59,3 +71,4 @@ export default class SettingsScreen extends React.Component {
       justifyContent: 'center',
     },
   });
+  
