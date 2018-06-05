@@ -1,7 +1,9 @@
 # Comment travailler sur degel-mobile
 
 * Allez dans le dossier `degel-mobile`
+* executez `npm install`
 * executez `exp start`
+* sur Android : scanner le code-barres et attendre (easy life)
 * sur iphone : dans un autre terminal dans le dossier `degel-mobile` exécutez `exp send -s 9991112222`
 
 # Documentation avec expo
