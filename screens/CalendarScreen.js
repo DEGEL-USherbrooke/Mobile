@@ -20,13 +20,12 @@ export default class CalendarScreen extends Component {
     var customData = require('../assets/exemples.json');
     customData = this.orderDatas(customData);
     for(var i = 0, len = customData.length; i< len; i++){
-        this.createEvents(customData[i]);
+      this.createEvents(customData[i]);
     }
   }
 
   orderDatas(datas){
-    return datas.sort(function(a,b)
-    {
+    return datas.sort(function(a,b){
       // modele date from json 2018-06-05T13:30:00-0400
       if (Moment(a.start).isAfter(Moment(b.start))){
         return 1;
@@ -45,14 +44,13 @@ export default class CalendarScreen extends Component {
     if (!this.state.items[strTime]) {
       this.state.items[strTime] = [];
     }
-        this.state.items[strTime].push(
-          {
-            title: object.title,
-            hours: Moment(object.start).format('H:mm') + ' - ' +Moment(object.end).format('H:mm'),
-            location: object.location,
-            teacherName: fullName,
-            description: object.description
-        });
+    this.state.items[strTime].push({
+      title: object.title,
+      hours: Moment(object.start).format('H:mm') + '-' +Moment(object.end).format('H:mm'),
+      location: object.location,
+      teacherName: fullName,
+      description: object.description
+    });
   }
 
   render() {
@@ -87,12 +85,27 @@ export default class CalendarScreen extends Component {
 
   renderItem(item) {
     return (
-      <View style={[styles.item, {height: item.height}]}>
-        <Text>{item.title}</Text>
-        <Text>{item.hours}</Text>
-        <Text>{item.location}</Text>
-        <Text>{item.teacherName}</Text>
-        <Text>{item.description}</Text>
+      <View style={[styles.titleContainer, {height: item.height}]}>
+        <Text style={styles.itemTitle}>{item.title}</Text>
+        <View style={[styles.hoursLocationContainer, {height: item.height}]}>
+         <View style={{marginRight:2}}>
+            <Text style={{justifyContent: 'center', alignItems:'center'}}>
+              {item.hours}
+            </Text>
+          </View>
+          <View>
+            <Text style={styles.textStyle}></Text>
+          </View>
+          <View style={{marginLeft:2}}>
+            <Text style={{justifyContent: 'center',alignItems:'center'}}>
+              {item.location}
+            </Text>
+          </View>
+        </View>
+        <View style={[styles.othersContainer, {height: item.height}]}>
+          <Text style={styles.itemTeacherName}>{item.teacherName}</Text>
+          <Text style={styles.itemDescription}>{item.description}</Text>
+        </View>
       </View>
     );
   }
@@ -114,14 +127,47 @@ export default class CalendarScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  item: {
+//Container
+  titleContainer: {
     backgroundColor: 'white',
-    flex: 1,
-    borderRadius: 5,
     padding: 10,
     marginRight: 10,
     marginTop: 17
   },
+  hoursLocationContainer: {
+    backgroundColor: 'white',
+    flexDirection:'row',
+    padding: 2,
+    marginRight: 30,
+    marginLeft: 30,
+    justifyContent: 'center',
+    alignItems:'center'
+  },
+  othersContainer:{
+    backgroundColor: 'white',
+    padding: 2,
+    marginTop: 10,
+    marginLeft: 6,
+  },
+
+// Items
+  itemTitle:{
+    fontSize:20,
+    textAlign: 'center'
+  },
+  itemHours:{
+    fontSize:16,
+  },
+  itemLocation:{
+    fontSize:14
+  },
+  itemTeacherName:{
+    fontSize:12
+  },
+  itemDescription:{
+    fontSize:12
+  },
+
   emptyDate: {
     height: 15,
     flex:1,
