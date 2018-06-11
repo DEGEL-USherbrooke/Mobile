@@ -1,6 +1,16 @@
 {
   "main": "node_modules/expo/AppEntry.js",
   "private": true,
+  "scripts": {
+    "test": "node_modules/.bin/jest"
+  },
+  "jest": {
+    "preset": "jest-expo",
+    "automock": false,
+    "setupFiles": [
+      "./setupJest.js"
+    ]
+  },
   "dependencies": {
     "expo": "^27.0.1",
     "moment": "^2.22.2",
@@ -9,5 +19,9 @@
     "react-native-settings-list": "^1.8.0",
     "react-native-calendars": "^1.19.3",
     "react-navigation": "^2.0.4"
+  },
+  "devDependencies": {
+    "jest-expo": "^27.0.1",
+    "jest-fetch-mock": "^1.6.3"
   }
 }
