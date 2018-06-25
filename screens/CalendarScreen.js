@@ -6,10 +6,48 @@ import {
 } from 'react-native';
 import {Agenda} from 'react-native-calendars';
 import Moment from 'moment';
+import { I18n } from '../locales/i18n';
+import { LocaleConfig } from 'react-native-calendars';
+
+LocaleConfig.locales['fr'] = {
+  monthNames: ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'],
+  monthNamesShort: ['Janv.','Févr.','Mars','Avril','Mai','Juin','Juil.','Août','Sept.','Oct.','Nov.','Déc.'],
+  dayNames: ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'],
+  dayNamesShort: ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam']
+};
+
+LocaleConfig.locales['en'] = {
+  monthNames: ['January','February','March','April','May','June','July','August','September','October','November','December'],
+  monthNamesShort: ['Jan.','Feb.','Mar','Apr','May','Jun','July.','Aug','Sept.','Oct.','Nov.','Dec.'],
+  dayNames: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
+  dayNamesShort: ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
+};
+
 export default class CalendarScreen extends Component {
-  static navigationOptions = {
-    title: 'Calendrier',
+  state = {
+    appIsReady: false,
   };
+
+  static navigationOptions = ({ navigation }) => {
+    const { params } = navigation.state;
+    return params;
+  };
+
+  async componentWillMount() {
+    await I18n.initAsync();
+    this.props.navigation.setParams({title: I18n.t('CalendarScreen.title') });
+
+    // change local of calendar
+    splitLocalString = I18n.locale.split('-');
+    if (splitLocalString[0] === 'fr') {
+      LocaleConfig.defaultLocale = 'fr';
+    }
+    else {
+      LocaleConfig.defaultLocale = 'en';
+    }
+
+    this.setState({appIsReady: true }); // fix I18n https://github.com/xcarpentier/ex-react-native-i18n/issues/7
+  }
 
   constructor(props) {
     super(props);
