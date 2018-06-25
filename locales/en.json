@@ -1,0 +1,11 @@
+{
+  "CalendarScreen": {
+    "title": "Calendar"
+  },
+  "SettingsScreen": {
+    "title": "Settings",
+    "settingsCalendar": "Calendar",
+    "settingsNotification": "Notifications",
+    "logOff": "Sign out"
+  }
+}

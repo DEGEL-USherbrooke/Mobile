@@ -6,9 +6,11 @@ import {
 } from 'react-native';
 import {Agenda} from 'react-native-calendars';
 import Moment from 'moment';
+import { I18n } from '../locales/i18n';
+
 export default class CalendarScreen extends Component {
   static navigationOptions = {
-    title: 'Calendrier',
+    title: I18n.t('CalendarScreen.title'),
   };
 
   constructor(props) {
