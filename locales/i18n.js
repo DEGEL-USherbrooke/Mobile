@@ -11,6 +11,4 @@ I18n.translations = {
   fr: fr_CA_data
 }
 
-I18n.initAsync(); // if this creates errors, put it in the componentWillMount of each dependant components
-
 export { I18n };

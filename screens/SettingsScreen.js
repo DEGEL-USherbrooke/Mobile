@@ -4,11 +4,22 @@ import SettingsList from 'react-native-settings-list';
 import { I18n } from '../locales/i18n';
 
 export default class SettingsScreen extends React.Component {
-  static navigationOptions = {
-    title: I18n.t('SettingsScreen.title'),
+  state = {
+    appIsReady: false,
   };
-  
-  constructor(){
+
+  static navigationOptions = ({ navigation }) => {
+    const { params } = navigation.state;
+    return params;
+  };
+
+  async componentWillMount() {
+    await I18n.initAsync();
+    this.props.navigation.setParams({title: I18n.t('SettingsScreen.title') });
+    this.setState({appIsReady: true }); // fix I18n https://github.com/xcarpentier/ex-react-native-i18n/issues/7
+  }
+
+  constructor() {
     super();
     this.onCalendarValueChange = this.onCalendarValueChange.bind(this);
     this.onNotificationValueChange = this.onNotificationValueChange.bind(this);

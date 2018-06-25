@@ -12,7 +12,6 @@ const CalendarStack = createStackNavigator({
 });
 
 CalendarStack.navigationOptions = {
-  tabBarLabel: 'Calendar',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
@@ -23,6 +22,9 @@ CalendarStack.navigationOptions = {
       }
     />
   ),
+  tabBarOptions: {
+    showLabel: false
+  }
 };
 
 const SettingsStack = createStackNavigator({
@@ -30,13 +32,15 @@ const SettingsStack = createStackNavigator({
 });
 
 SettingsStack.navigationOptions = {
-  tabBarLabel: 'Settings',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === 'ios' ? `ios-options${focused ? '' : '-outline'}` : 'md-options'}
+      name={Platform.OS === 'ios' ? `ios-settings${focused ? '' : '-outline'}` : 'md-settings'}
     />
   ),
+  tabBarOptions: {
+    showLabel: false
+  }
 };
 
 export default createBottomTabNavigator({
