@@ -2,6 +2,8 @@ import React from 'react';
 import { StyleSheet, Text, View, AsyncStorage } from 'react-native';
 import SettingsList from 'react-native-settings-list';
 import { I18n } from '../locales/i18n';
+import { signOut } from '../BL/signIn';
+import { User } from '../constants/user';
 
 export default class SettingsScreen extends React.Component {
   state = {
@@ -15,6 +17,7 @@ export default class SettingsScreen extends React.Component {
 
   async componentWillMount() {
     await I18n.initAsync();
+    await User.sync();
     this.props.navigation.setParams({title: I18n.t('SettingsScreen.title') });
     this.setState({appIsReady: true }); // fix I18n https://github.com/xcarpentier/ex-react-native-i18n/issues/7
   }
@@ -59,11 +62,15 @@ export default class SettingsScreen extends React.Component {
           titleInfoStyle={styles.titleInfoStyle}
           hasNavArrow={false}
           onPress={ async () => {
-              await AsyncStorage.removeItem('access_token');
-              await AsyncStorage.removeItem('refresh_token');
+              signOut();
               this.props.navigation.navigate('AuthLoading');
             }
           }
+        />
+        <SettingsList.Item
+          title={User.getCip() + ' - ' + User.getId()}
+          titleStyle={{color:'grey', textAlign: 'center'}}
+          hasNavArrow={false}
         />
         </SettingsList>
 
