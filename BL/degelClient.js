@@ -29,11 +29,13 @@ class DegelClient {
 
   static async saveCurrentUser() {
     currentUser = await this.authorizedFetch(BASE_URL + '/api/user/current', 'GET');
+
     if (currentUser.cip !== undefined && currentUser.id !== undefined){
       await StorageHelper.set('cip', currentUser.cip);
       await StorageHelper.set('id', currentUser.id);
     } else {
-      console.log("error : " + currentUser);
+      console.log("error : ");
+      console.log(currentUser);
     }
   }
 

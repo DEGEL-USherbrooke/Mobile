@@ -2,6 +2,11 @@ import { Permissions, Notifications } from 'expo';
 var { registerForPushNotificationsAsync } = require('../notificationBL');
 
 describe('registerForPushNotificationsAsync', () => {
+  beforeAll(() => {
+    // mock http requests to verify parameters
+    global.fetch = require('jest-fetch-mock');
+  });
+
   // general data mocks
   const expoToken = 'ExponentPushToken[brvkU3IvlmdlP1DihK6Sty]';
   const permissionGrantedPayload = { status: 'granted' };

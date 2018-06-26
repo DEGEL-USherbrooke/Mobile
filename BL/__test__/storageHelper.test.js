@@ -9,7 +9,7 @@ describe('StorageHelper', () => {
   });
 
   beforeEach(() => {
-    jest.restoreAllMocks(); // remove mock implementation between tests
+    jest.restoreAllMocks(); // remove spy implementation between tests
     storage.clear();
   })
 
