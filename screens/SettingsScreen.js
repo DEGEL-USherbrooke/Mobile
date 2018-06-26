@@ -59,7 +59,8 @@ export default class SettingsScreen extends React.Component {
           titleInfoStyle={styles.titleInfoStyle}
           hasNavArrow={false}
           onPress={ async () => {
-              await AsyncStorage.removeItem('userToken');
+              await AsyncStorage.removeItem('access_token');
+              await AsyncStorage.removeItem('refresh_token');
               this.props.navigation.navigate('AuthLoading');
             }
           }
