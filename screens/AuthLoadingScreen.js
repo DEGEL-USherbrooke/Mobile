@@ -25,10 +25,7 @@ export default class AuthLoadingScreen extends React.Component {
     // This will switch to the App screen or Auth screen and this loading
     // screen will be unmounted and thrown away.
     if (accessToken && refreshToken) {
-      // todo : launch get user info task
-      degelClient = new DegelClient();
-      await degelClient.init();
-      await degelClient.getCurrentUser();
+      await DegelClient.saveCurrentUser();
       this.props.navigation.navigate('Main');
     }
     else {

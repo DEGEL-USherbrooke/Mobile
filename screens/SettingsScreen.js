@@ -3,12 +3,9 @@ import { StyleSheet, Text, View, AsyncStorage } from 'react-native';
 import SettingsList from 'react-native-settings-list';
 import { I18n } from '../locales/i18n';
 import { signOut } from '../BL/signIn';
-import { User } from '../constants/user';
+import { DegelClient } from '../BL/degelClient';
 
 export default class SettingsScreen extends React.Component {
-  state = {
-    appIsReady: false,
-  };
 
   static navigationOptions = ({ navigation }) => {
     const { params } = navigation.state;
@@ -17,17 +14,25 @@ export default class SettingsScreen extends React.Component {
 
   async componentWillMount() {
     await I18n.initAsync();
-    await User.sync();
     this.props.navigation.setParams({title: I18n.t('SettingsScreen.title') });
-    this.setState({appIsReady: true }); // fix I18n https://github.com/xcarpentier/ex-react-native-i18n/issues/7
+
+    this.cip = await AsyncStorage.getItem('cip');
+    this.id = await AsyncStorage.getItem('id');
+    this.settingsState = await DegelClient.getSettingsStatus();
+
+    this.setState({
+      appIsReady: true, // fix I18n https://github.com/xcarpentier/ex-react-native-i18n/issues/7
+      switchNotificationValue: this.settingsState.notification
+    }); 
   }
 
   constructor() {
     super();
-    this.onCalendarValueChange = this.onCalendarValueChange.bind(this);
     this.onNotificationValueChange = this.onNotificationValueChange.bind(this);
-    this.state = {switchCalendarValue: false,
-      switchNotificationValue: false
+    this.state = {
+      switchCalendarValue: false,
+      switchNotificationValue: false,
+      appIsReady: false
     };
   }
 
@@ -37,14 +42,7 @@ export default class SettingsScreen extends React.Component {
       <View style={{backgroundColor:'#EFEFF4',flex:1}}>
 
         <SettingsList borderColor='#c8c7cc' defaultItemSize={50}>
-        <SettingsList.Header headerStyle={{marginTop:15}}/>
-        <SettingsList.Item
-        title={I18n.t('SettingsScreen.settingsCalendar')}
-        hasSwitch={true}
-        switchState={this.state.switchCalendarValue}
-        switchOnValueChange={this.onCalendarValueChange}
-        hasNavArrow={false}
-        />
+        <SettingsList.Header headerStyle={{marginTop:0}}/>
         <SettingsList.Item
         //icon={<Image style={styles.imageStyle} source={require('./images/wifi.png')}/>}
         title={I18n.t('SettingsScreen.settingsNotification')}
@@ -68,8 +66,8 @@ export default class SettingsScreen extends React.Component {
           }
         />
         <SettingsList.Item
-          title={User.getCip() + ' - ' + User.getId()}
-          titleStyle={{color:'grey', textAlign: 'center'}}
+          title={this.cip + ' - ' + this.id}
+          titleStyle={{color:'grey', textAlign: 'center', fontSize: 12}}
           hasNavArrow={false}
         />
         </SettingsList>
@@ -77,10 +75,9 @@ export default class SettingsScreen extends React.Component {
       </View>
     );
   }
-  onCalendarValueChange(value){
-    this.setState({switchCalendarValue: value});
-  }
+
   onNotificationValueChange(value){
+    DegelClient.setSettingsStatus(value);
     this.setState({switchNotificationValue: value});
   }
 }
