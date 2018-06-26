@@ -20,9 +20,6 @@ async function requestTokensWithCode(code) {
     accessToken = responseJson.access_token;
     refreshToken = responseJson.refresh_token;
 
-    console.log("access_token : " + accessToken)
-    console.log("refresh_token : " + refreshToken)
-
     // save tokens to storage
     await AsyncStorage.setItem('access_token', accessToken);
     await AsyncStorage.setItem('refresh_token', refreshToken);
@@ -32,6 +29,14 @@ async function requestTokensWithCode(code) {
   }
 }
 
+async function signOut() {
+  await AsyncStorage.removeItem('access_token');
+  await AsyncStorage.removeItem('refresh_token');
+  await AsyncStorage.removeItem('cip');
+  await AsyncStorage.removeItem('id');
+}
+
 module.exports = { 
-  requestTokensWithCode
+  requestTokensWithCode,
+  signOut
 };

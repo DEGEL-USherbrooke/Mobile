@@ -8,6 +8,8 @@ import {
   View,
 } from 'react-native';
 
+import { DegelClient } from '../BL/degelClient';
+
 
 export default class AuthLoadingScreen extends React.Component {
   constructor() {
@@ -24,6 +26,9 @@ export default class AuthLoadingScreen extends React.Component {
     // screen will be unmounted and thrown away.
     if (accessToken && refreshToken) {
       // todo : launch get user info task
+      degelClient = new DegelClient();
+      await degelClient.init();
+      await degelClient.getCurrentUser();
       this.props.navigation.navigate('Main');
     }
     else {
