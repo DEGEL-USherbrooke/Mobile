@@ -1,5 +1,5 @@
 import { oauth_token_uri, AUTHORIZE_HEADER } from '../constants/endpoints';
-import { AsyncStorage } from 'react-native';
+import { StorageHelper } from './storageHelper';
 
 async function requestTokensWithCode(code) {
   console.log("requestTokensWithCode : " + code);
@@ -21,8 +21,10 @@ async function requestTokensWithCode(code) {
     refreshToken = responseJson.refresh_token;
 
     // save tokens to storage
-    await AsyncStorage.setItem('access_token', accessToken);
-    await AsyncStorage.setItem('refresh_token', refreshToken);
+    await StorageHelper.set('access_token', accessToken);
+    await StorageHelper.set('refresh_token', refreshToken);
+
+    console.log("here");
 
   } catch (error) {
     console.error(error);
@@ -30,10 +32,10 @@ async function requestTokensWithCode(code) {
 }
 
 async function signOut() {
-  await AsyncStorage.removeItem('access_token');
-  await AsyncStorage.removeItem('refresh_token');
-  await AsyncStorage.removeItem('cip');
-  await AsyncStorage.removeItem('id');
+  await StorageHelper.remove('access_token');
+  await StorageHelper.remove('refresh_token');
+  await StorageHelper.remove('cip');
+  await StorageHelper.remove('id');
 }
 
 module.exports = { 

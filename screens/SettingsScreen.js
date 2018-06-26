@@ -1,9 +1,10 @@
 import React from 'react';
-import { StyleSheet, Text, View, AsyncStorage } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import SettingsList from 'react-native-settings-list';
 import { I18n } from '../locales/i18n';
-import { signOut } from '../BL/signIn';
+import { signOut } from '../BL/session';
 import { DegelClient } from '../BL/degelClient';
+import { StorageHelper } from '../BL/storageHelper';
 
 export default class SettingsScreen extends React.Component {
 
@@ -16,8 +17,8 @@ export default class SettingsScreen extends React.Component {
     await I18n.initAsync();
     this.props.navigation.setParams({title: I18n.t('SettingsScreen.title') });
 
-    this.cip = await AsyncStorage.getItem('cip');
-    this.id = await AsyncStorage.getItem('id');
+    this.cip = await StorageHelper.get('cip');
+    this.id = await StorageHelper.get('id');
     this.settingsState = await DegelClient.getSettingsStatus();
 
     this.setState({

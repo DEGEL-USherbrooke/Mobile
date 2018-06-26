@@ -1,11 +1,11 @@
-import { AsyncStorage } from 'react-native';
+import { StorageHelper } from './storageHelper';
 import { BASE_URL } from '../constants/endpoints';
 
 class DegelClient {
 
   // todo : parametrize body and method
   static async authorizedFetch(url, method = 'POST', body = null) {
-    _accessToken = await AsyncStorage.getItem('access_token');
+    _accessToken = await StorageHelper.get('access_token');
 
     try {
       let response = await fetch(url, {
@@ -30,8 +30,8 @@ class DegelClient {
   static async saveCurrentUser() {
     currentUser = await this.authorizedFetch(BASE_URL + '/api/user/current', 'GET');
     try {
-      await AsyncStorage.setItem('cip', currentUser.cip);
-      await AsyncStorage.setItem('id', currentUser.id);
+      await StorageHelper.set('cip', currentUser.cip);
+      await StorageHelper.set('id', currentUser.id);
     }
     catch (error) {
       console.log("error : " + currentUser);
@@ -40,7 +40,7 @@ class DegelClient {
   }
 
   static async getSettingsStatus() {
-    _id = await AsyncStorage.getItem('id');
+    _id = await StorageHelper.get('id');
     settingsStateResponse = await this.authorizedFetch(BASE_URL + '/api/user/' + _id + '/settings', 'GET');
     
     settingsState = {
@@ -59,7 +59,7 @@ class DegelClient {
   }
 
   static async setSettingsStatus(notification = false) {
-    _id = await AsyncStorage.getItem('id');
+    _id = await StorageHelper.get('id');
 
     settingsState = {
       "notifications": {
