@@ -1,12 +1,14 @@
 import React from 'react';
 
 import {
-  AsyncStorage,
   Button,
   StyleSheet,
   View,
   WebView,
 } from 'react-native';
+
+import { oauth_authorize_uri, CALLBACK_URI } from '../constants/endpoints';
+import { requestTokensWithCode } from '../BL/signIn';
 
 export default class SignInScreen extends React.Component {
   static navigationOptions = {
@@ -26,10 +28,7 @@ export default class SignInScreen extends React.Component {
   render() {
     return (
       <WebView
-        source={{uri: 'https://s6iprojet02.gel.usherbrooke.ca/oauth/authorize'
-          + '?client_id=R9HZLN7GMLET8PB7JQWJ963N9A5ML7&response_type=code&'
-          + 'redirect_uri=https://s6iprojet02.gel.usherbrooke.ca/oauth/callback'
-          + '&state=' + this.stateStr }}
+        source={{uri: oauth_authorize_uri(this.stateStr) }}
         onNavigationStateChange={this._navChanged}
         style={{marginTop: 20}}
       />
@@ -39,7 +38,7 @@ export default class SignInScreen extends React.Component {
   //Appellée à chaque changement de page dans la webview
   _navChanged = (navState) => {
     //Vérifie l'URL d'arrivée
-    if(navState.url.includes('https://s6iprojet02.gel.usherbrooke.ca/oauth/callback?code=')){
+    if(navState.url.includes(CALLBACK_URI + '?code=')){
 
       this.counter++;
 
@@ -55,23 +54,17 @@ export default class SignInScreen extends React.Component {
         this.counter = 0;
         //Vérifie que le paramètre state des URL de départ et d'arrivée sont les mêmes
         if(this.stateStr === state){
-          this._requestToken(code);
+          this._requestTokens(code);
         }
       }
     };
   }
 
 
-  _requestToken = (code) => {
-    //TODO : header pour obtenir le token
-    this._setToken('token provisoire');
+  _requestTokens = async (code) => {
+    await requestTokensWithCode(code);
+    this.props.navigation.navigate('AuthLoading');
   }
-
-  //Set le token dans Asyncstorage et redirige vers la page principale
-  _setToken = async (token) => {
-    await AsyncStorage.setItem('userToken', token);
-    this.props.navigation.navigate('Main');
-  };
 
 }
 
