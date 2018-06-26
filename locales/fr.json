@@ -4,8 +4,7 @@
   },
   "SettingsScreen": {
     "title": "Paramètres",
-    "settingsCalendar": "Calendrier",
-    "settingsNotification": "Notifications",
+    "settingsNotification": "Notifications mobile",
     "logOff": "Se déconnecter"
   }
 }
