@@ -67,7 +67,7 @@ export default class SettingsScreen extends React.Component {
         />
         <SettingsList.Item
           title={this.cip + ' - ' + this.id}
-          titleStyle={{color:'grey', textAlign: 'center', fontSize: 10}}
+          titleStyle={{color:'grey', textAlign: 'center', fontSize: 12}}
           hasNavArrow={false}
         />
         </SettingsList>
