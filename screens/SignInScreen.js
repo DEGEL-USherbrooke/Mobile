@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 
 import { oauth_authorize_uri, CALLBACK_URI } from '../constants/endpoints';
-import { requestTokensWithCode } from '../BL/signIn';
+import { requestTokensWithCode } from '../BL/session';
 
 export default class SignInScreen extends React.Component {
   static navigationOptions = {
