@@ -2,13 +2,13 @@ import React from 'react';
 
 import {
   ActivityIndicator,
-  AsyncStorage,
   StatusBar,
   StyleSheet,
   View,
 } from 'react-native';
 
 import { DegelClient } from '../BL/degelClient';
+import { StorageHelper } from '../BL/storageHelper';
 
 
 export default class AuthLoadingScreen extends React.Component {
@@ -19,11 +19,12 @@ export default class AuthLoadingScreen extends React.Component {
 
   // Fetch the token from storage then navigate to our appropriate place
   _bootstrapAsync = async () => {
-    const accessToken = await AsyncStorage.getItem('access_token');
-    const refreshToken = await AsyncStorage.getItem('refresh_token');
+    const accessToken = await StorageHelper.get('access_token');
+    const refreshToken = await StorageHelper.get('refresh_token');
 
     // This will switch to the App screen or Auth screen and this loading
     // screen will be unmounted and thrown away.
+    console.log
     if (accessToken && refreshToken) {
       await DegelClient.saveCurrentUser();
       this.props.navigation.navigate('Main');

@@ -23,6 +23,7 @@
   },
   "devDependencies": {
     "jest-expo": "^27.0.1",
-    "jest-fetch-mock": "^1.6.3"
+    "jest-fetch-mock": "^1.6.3",
+    "mock-async-storage": "^2.0.2"
   }
 }
