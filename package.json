@@ -19,11 +19,11 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-27.0.0.tar.gz",
     "react-native-calendars": "^1.19.3",
     "react-native-settings-list": "^1.8.0",
-    "react-navigation": "^2.0.4"
+    "react-navigation": "^2.5.3"
   },
   "devDependencies": {
     "jest-expo": "^27.0.1",
-    "jest-fetch-mock": "^1.6.3",
+    "jest-fetch-mock": "^1.6.5",
     "mock-async-storage": "^2.0.2"
   }
 }

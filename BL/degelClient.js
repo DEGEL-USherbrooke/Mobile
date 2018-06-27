@@ -29,20 +29,18 @@ class DegelClient {
 
   static async saveCurrentUser() {
     currentUser = await this.authorizedFetch(BASE_URL + '/api/user/current', 'GET');
-    try {
+    if (currentUser.cip !== undefined && currentUser.id !== undefined){
       await StorageHelper.set('cip', currentUser.cip);
       await StorageHelper.set('id', currentUser.id);
-    }
-    catch (error) {
+    } else {
       console.log("error : " + currentUser);
     }
-    
   }
 
   static async getSettingsStatus() {
     _id = await StorageHelper.get('id');
     settingsStateResponse = await this.authorizedFetch(BASE_URL + '/api/user/' + _id + '/settings', 'GET');
-    
+
     settingsState = {
       notification: false
     }
@@ -68,8 +66,8 @@ class DegelClient {
     }
 
     response = await this.authorizedFetch(
-      BASE_URL + '/api/user/' + _id + '/settings', 
-      'POST', 
+      BASE_URL + '/api/user/' + _id + '/settings',
+      'POST',
       JSON.stringify(settingsState)
     );
 
