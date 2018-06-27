@@ -24,8 +24,6 @@ async function requestTokensWithCode(code) {
     await StorageHelper.set('access_token', accessToken);
     await StorageHelper.set('refresh_token', refreshToken);
 
-    console.log("here");
-
   } catch (error) {
     console.error(error);
   }
