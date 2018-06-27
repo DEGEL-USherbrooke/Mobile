@@ -56,6 +56,23 @@ export default class CalendarScreen extends Component {
     };
     // Todo Créer une fonction dans BL qui va importer le json du backend
     var customData = require('../assets/exemples.json');
+    var backEndData = require('../assets/calendar.json');
+
+    // Get all events
+    var events = backEndData[2];
+    events = events.slice(1);
+
+    backEndData = this.orderBackEndDatas(events);
+
+    for(var i = 0, len = backEndData.length-100; i< len; i++){
+      var temp = backEndData[i];
+      temp = temp[1];
+      temp = temp[1];
+      temp = temp[3];
+      console.log(temp);
+    }
+    // JAI TOUT LES EVENTS EN ORDRE -> FAIRE CREATE EVENTS POUR CHACUN MNT
+
     customData = this.orderDatas(customData);
     for(var i = 0, len = customData.length; i< len; i++){
       this.createEvents(customData[i]);
@@ -66,6 +83,29 @@ export default class CalendarScreen extends Component {
     return datas.sort(function(a,b){
       // modele date from json 2018-06-05T13:30:00-0400
       if (Moment(a.start).isAfter(Moment(b.start))){
+        return 1;
+      } else {
+        return -1;
+      }
+    });
+  }
+
+  orderBackEndDatas(datas){
+    return datas.sort(function(a,b){
+      a = a[1];
+      a = a[1];
+      if(a !== undefined){
+        a = a[3];
+      }
+
+      b = b[1];
+      b = b[1];
+      if(b !== undefined){
+        b = b[3];
+      }
+
+      // modele date from json 2018-06-05T13:30:00-0400
+      if (Moment(a).isAfter(Moment(b))){
         return 1;
       } else {
         return -1;
