@@ -4,7 +4,6 @@ import { StorageHelper } from '../storageHelper';
 import { AsyncStorage as storage } from 'react-native';
 
 
-
 describe('DegelClient', () => {
   beforeAll(() => {
     // record http calls and replay them
@@ -50,5 +49,48 @@ describe('DegelClient', () => {
     expect(_cip).toBeUndefined();
     expect(_id).toBeUndefined();
     expect(consoleSpy).toHaveBeenCalledTimes(2);
+  });
+
+  test('#getSettingsStatus authorized', async ()=> {
+    fetch.configure({
+      fixturePath: './_fixtures/authorized/'
+    });
+
+    await StorageHelper.set('access_token', 'f6666455-9955-4722-9bcf-658787dabf2a');
+    await StorageHelper.set('id', 'e4130aaa-f585-4564-b7e6-dce37e58166c');
+
+    settingsStatus = await DegelClient.getSettingsStatus();
+
+    expect(settingsStatus).toEqual({ notification: true });
+  });
+
+  test('#getSettingsStatus unauthorized', async ()=> {
+    const consoleSpy = jest.spyOn(global.console, 'log').mockImplementation(() => { return null });
+    fetch.configure({
+      fixturePath: './_fixtures/unauthorized/'
+    });
+
+    await StorageHelper.set('access_token', 'bad-token');
+    await StorageHelper.set('id', 'e4130aaa-f585-4564-b7e6-dce37e58166c');
+
+    settingsStatus = await DegelClient.getSettingsStatus();
+
+    expect(settingsStatus).toEqual({ notification: false });
+    expect(consoleSpy).toHaveBeenCalledTimes(2);
+  });
+
+  test.only('#getSettingsStatus unauthorized when id is undefined', async ()=> {
+    const consoleSpy = jest.spyOn(global.console, 'log').mockImplementation(() => { return null });
+    fetch.configure({
+      fixturePath: './_fixtures/unauthorized/'
+    });
+
+    await StorageHelper.set('access_token', 'f6666455-9955-4722-9bcf-658787dabf2a');
+    await StorageHelper.set('id', undefined); // this yield an additional log
+
+    settingsStatus = await DegelClient.getSettingsStatus();
+
+    expect(settingsStatus).toEqual({ notification: false });
+    expect(consoleSpy).toHaveBeenCalledTimes(4);
   });
 });

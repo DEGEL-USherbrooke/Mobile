@@ -41,6 +41,11 @@ class DegelClient {
 
   static async getSettingsStatus() {
     _id = await StorageHelper.get('id');
+
+    if (_id == undefined) {
+      console.log('No user_id was set - please sign out');
+    }
+
     settingsStateResponse = await this.authorizedFetch(BASE_URL + '/api/user/' + _id + '/settings', 'GET');
 
     settingsState = {
