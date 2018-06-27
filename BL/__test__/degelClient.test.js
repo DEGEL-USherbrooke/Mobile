@@ -2,6 +2,7 @@ import { DegelClient } from '../degelClient';
 import MockAsyncStorage from 'mock-async-storage';
 import { StorageHelper } from '../storageHelper';
 import { AsyncStorage as storage } from 'react-native';
+import { Session } from '../session'
 
 
 describe('DegelClient fetch-vcr', () => {
@@ -20,35 +21,56 @@ describe('DegelClient fetch-vcr', () => {
     storage.clear();
   });
 
-  test('#saveCurrentUser authorized', async ()=> {
+  test('#requestAndSaveAccessTokensWithCode authorized', async ()=> {
+    fetch.configure({
+      fixturePath: './_fixtures/authorized/'
+    });
+
+    await DegelClient.requestAndSaveAccessTokensWithCode('FIMAdB');
+    
+    _accessToken = await StorageHelper.get('access_token');
+    _refreshToken = await StorageHelper.get('refresh_token');
+
+    expect(_accessToken).toBe('51062cb3-009c-4a0f-aa37-77385db9a14f');
+    expect(_refreshToken).toBe('90bb4fa5-dcbf-41f0-b273-903b92f973d9');
+  });
+
+  test('#requestAndSaveAccessTokensWithCode unauthorized', async ()=> {
+    fetch.configure({
+      fixturePath: './_fixtures/unauthorized/'
+    });
+
+    await DegelClient.requestAndSaveAccessTokensWithCode('badcode');
+
+    _accessToken = await StorageHelper.get('access_token');
+    _refreshToken = await StorageHelper.get('refresh_token');
+
+    expect(_accessToken).toBe(undefined);
+    expect(_refreshToken).toBe(undefined);
+  });
+
+  test('#getCurrentUser authorized', async ()=> {
     fetch.configure({
       fixturePath: './_fixtures/authorized/'
     });
 
     await StorageHelper.set('access_token', '4b876303-d8ad-4aa8-b832-390315e2e029');
-    await DegelClient.saveCurrentUser();
+    _user = await DegelClient.getCurrentUser();
 
-    _cip = await StorageHelper.get('cip');
-    _id = await StorageHelper.get('id');
-
-    expect(_cip).toBe('girp2705');
+    expect(_user.cip).toBe('girp2705');
+    expect(_user.id).toBe('e4130aaa-f585-4564-b7e6-dce37e58166c');
   });
 
-  test('#saveCurrentUser unauthorized', async () => {
-    const consoleSpy = jest.spyOn(global.console, 'log').mockImplementation(() => { return null });
+  test('#getCurrentUser unauthorized', async () => {
     fetch.configure({
       fixturePath: './_fixtures/unauthorized/'
     });
 
     await StorageHelper.set('access_token', '55e85473-1094-4607-b0bb-81b18e1e7b1b');
-    await DegelClient.saveCurrentUser();
-    
-    _cip = await StorageHelper.get('cip');
-    _id = await StorageHelper.get('id');
+    _user = await DegelClient.getCurrentUser();
 
-    expect(_cip).toBeUndefined();
-    expect(_id).toBeUndefined();
-    expect(consoleSpy).toHaveBeenCalledTimes(2);
+    expect(_user.cip).not.toBeTruthy();
+    expect(_user.id).not.toBeTruthy();
   });
 
   test('#getSettingsStatus authorized', async ()=> {
@@ -56,8 +78,8 @@ describe('DegelClient fetch-vcr', () => {
       fixturePath: './_fixtures/authorized/'
     });
 
+    Session._id = 'e4130aaa-f585-4564-b7e6-dce37e58166c';
     await StorageHelper.set('access_token', 'f6666455-9955-4722-9bcf-658787dabf2a');
-    await StorageHelper.set('id', 'e4130aaa-f585-4564-b7e6-dce37e58166c');
 
     settingsStatus = await DegelClient.getSettingsStatus();
 
@@ -71,7 +93,7 @@ describe('DegelClient fetch-vcr', () => {
     });
 
     await StorageHelper.set('access_token', 'bad-token');
-    await StorageHelper.set('id', 'e4130aaa-f585-4564-b7e6-dce37e58166c');
+    Session._id = 'e4130aaa-f585-4564-b7e6-dce37e58166c';
 
     settingsStatus = await DegelClient.getSettingsStatus();
 
@@ -86,12 +108,12 @@ describe('DegelClient fetch-vcr', () => {
     });
 
     await StorageHelper.set('access_token', 'f6666455-9955-4722-9bcf-658787dabf2a');
-    await StorageHelper.set('id', undefined); // this yield an additional log
+    Session._id = undefined;
 
     settingsStatus = await DegelClient.getSettingsStatus();
 
     expect(settingsStatus).toEqual({ notification: false });
-    expect(consoleSpy).toHaveBeenCalledTimes(4);
+    expect(consoleSpy).toHaveBeenCalledTimes(3);
   });
 
   test('#setSettingsStatus unauthorized', async ()=> {
@@ -101,7 +123,7 @@ describe('DegelClient fetch-vcr', () => {
     });
 
     await StorageHelper.set('access_token', 'bad-token');
-    await StorageHelper.set('id', 'e4130aaa-f585-4564-b7e6-dce37e58166c');
+    Session._id = 'e4130aaa-f585-4564-b7e6-dce37e58166c';
 
     await DegelClient.setSettingsStatus(true);
 
@@ -115,11 +137,11 @@ describe('DegelClient fetch-vcr', () => {
     });
 
     await StorageHelper.set('access_token', 'f6666455-9955-4722-9bcf-658787dabf2a');
-    await StorageHelper.set('id', undefined); // this yield one additional log
+    Session._id = undefined;
 
     await DegelClient.setSettingsStatus(true);
 
-    expect(consoleSpy).toHaveBeenCalledTimes(3);
+    expect(consoleSpy).toHaveBeenCalledTimes(2);
   });
 });
 
@@ -143,7 +165,7 @@ describe('DegelClient jest-fetch-mock', () => {
     fetch.mockResponseOnce(JSON.stringify({"notifications":{"mobile":true}}));
     const consoleSpy = jest.spyOn(global.console, 'log').mockImplementation(() => { return null });
     await StorageHelper.set('access_token', 'f6666455-9955-4722-9bcf-658787dabf2a');
-    await StorageHelper.set('id', 'e4130aaa-f585-4564-b7e6-dce37e58166c');
+    Session._id = 'e4130aaa-f585-4564-b7e6-dce37e58166c';
 
     await DegelClient.setSettingsStatus(true);
 
@@ -156,7 +178,7 @@ describe('DegelClient jest-fetch-mock', () => {
     fetch.mockResponseOnce(JSON.stringify({"notifications":{"mobile":false}}));
     const consoleSpy = jest.spyOn(global.console, 'log').mockImplementation(() => { return null });
     await StorageHelper.set('access_token', 'f6666455-9955-4722-9bcf-658787dabf2a');
-    await StorageHelper.set('id', 'e4130aaa-f585-4564-b7e6-dce37e58166c');
+    Session._id = 'e4130aaa-f585-4564-b7e6-dce37e58166c';
 
     await DegelClient.setSettingsStatus(false);
 
