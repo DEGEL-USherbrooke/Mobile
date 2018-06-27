@@ -2,8 +2,6 @@ import { StorageHelper } from './storageHelper';
 import { BASE_URL } from '../constants/endpoints';
 
 class DegelClient {
-
-  // todo : parametrize body and method
   static async authorizedFetch(url, method = 'POST', body = null) {
     _accessToken = await StorageHelper.get('access_token');
 
@@ -29,16 +27,23 @@ class DegelClient {
 
   static async saveCurrentUser() {
     currentUser = await this.authorizedFetch(BASE_URL + '/api/user/current', 'GET');
+
     if (currentUser.cip !== undefined && currentUser.id !== undefined){
       await StorageHelper.set('cip', currentUser.cip);
       await StorageHelper.set('id', currentUser.id);
     } else {
-      console.log("error : " + currentUser);
+      console.log("error : ");
+      console.log(currentUser);
     }
   }
 
   static async getSettingsStatus() {
     _id = await StorageHelper.get('id');
+
+    if (_id == undefined) {
+      console.log('No user_id was set - please sign out');
+    }
+
     settingsStateResponse = await this.authorizedFetch(BASE_URL + '/api/user/' + _id + '/settings', 'GET');
 
     settingsState = {
@@ -58,6 +63,10 @@ class DegelClient {
 
   static async setSettingsStatus(notification = false) {
     _id = await StorageHelper.get('id');
+
+    if (_id == undefined) {
+      console.log('No user_id was set - please sign out');
+    }
 
     settingsState = {
       "notifications": {
