@@ -2,8 +2,6 @@ import { StorageHelper } from './storageHelper';
 import { BASE_URL } from '../constants/endpoints';
 
 class DegelClient {
-
-  // todo : parametrize body and method
   static async authorizedFetch(url, method = 'POST', body = null) {
     _accessToken = await StorageHelper.get('access_token');
 
@@ -65,6 +63,10 @@ class DegelClient {
 
   static async setSettingsStatus(notification = false) {
     _id = await StorageHelper.get('id');
+
+    if (_id == undefined) {
+      console.log('No user_id was set - please sign out');
+    }
 
     settingsState = {
       "notifications": {
