@@ -8,7 +8,7 @@ describe('registerForPushNotificationsAsync', () => {
   const permissionDeniedPayload = { status: 'denied' };
 
   beforeEach(() => {
-    jest.resetAllMocks()
+    jest.resetAllMocks();
   })
 
   test('Sends registration token when permission is granted by the user', async () => {
