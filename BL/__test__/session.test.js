@@ -27,6 +27,7 @@ describe('Session ', () => {
     });
 
     await storage.setItem('access_token', '4b876303-d8ad-4aa8-b832-390315e2e029');
+    await storage.setItem('refresh_token', '90bb4fa5-dcbf-41f0-b273-903b92f973d9');
     result = await Session.logIn();
 
     expect(result).toBe(true);
@@ -42,12 +43,30 @@ describe('Session ', () => {
     });
 
     await storage.setItem('access_token', '55e85473-1094-4607-b0bb-81b18e1e7b1b');
+    await storage.setItem('refresh_token', '90bb4fa5-dcbf-41f0-b273-903b92f973d9');
+
     result = await Session.logIn();
 
     expect(result).toBe(false);
 
     expect(Session._id).toBe('undefined');
     expect(Session._cip).toBe('undefined');
+  });
+
+  test('#logIn unauthorized expired refresh token', async ()=>{
+    fetch.configure({
+      fixturePath: './_fixtures/unauthorized/'
+    });
+
+    await storage.setItem('access_token', '55e85473-1094-4607-b0bb-81b18e1e7b1b');
+    await storage.setItem('refresh_token', 'expired');
+
+    result = await Session.logIn();
+
+    expect(result).toBe(false);
+
+    expect(Session._id).toBe(undefined);
+    expect(Session._cip).toBe(undefined);
   });
 
   test('#logOut remove all stored values', async ()=>{

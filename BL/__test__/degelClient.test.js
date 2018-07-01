@@ -19,23 +19,28 @@ describe('DegelClient fetch-vcr', () => {
   beforeEach(() => {
     jest.restoreAllMocks(); // remove spy implementation between tests
     storage.clear();
+    Session._expiry = 10000;
   });
 
   test('#requestAndSaveAccessTokensWithCode authorized', async ()=> {
+    const consoleSpy = jest.spyOn(global.console, 'log').mockImplementation(() => { return null });
     fetch.configure({
       fixturePath: './_fixtures/authorized/'
     });
 
-    await DegelClient.requestAndSaveAccessTokensWithCode('FIMAdB');
+    await DegelClient.requestAndSaveAccessTokensWithCode('F7GJMP');
     
     _accessToken = await StorageHelper.get('access_token');
     _refreshToken = await StorageHelper.get('refresh_token');
 
     expect(_accessToken).toBe('51062cb3-009c-4a0f-aa37-77385db9a14f');
     expect(_refreshToken).toBe('90bb4fa5-dcbf-41f0-b273-903b92f973d9');
+    expect(Session._expiry).toBe(8354);
+    expect(consoleSpy).toHaveBeenCalledTimes(3);
   });
 
   test('#requestAndSaveAccessTokensWithCode unauthorized', async ()=> {
+    const consoleSpy = jest.spyOn(global.console, 'log').mockImplementation(() => { return null });
     fetch.configure({
       fixturePath: './_fixtures/unauthorized/'
     });
@@ -47,6 +52,38 @@ describe('DegelClient fetch-vcr', () => {
 
     expect(_accessToken).toBe(undefined);
     expect(_refreshToken).toBe(undefined);
+    expect(Session._expiry).toBe(10000);
+    expect(consoleSpy).toHaveBeenCalledTimes(1);
+  });
+
+  test('#refreshAccessToken ', async ()=>{
+    fetch.configure({
+      fixturePath: './_fixtures/authorized/'
+    });
+
+    await StorageHelper.set('refresh_token', '90bb4fa5-dcbf-41f0-b273-903b92f973d9');
+
+    result = await DegelClient.refreshAccessToken();
+
+    _accessToken = await storage.getItem('access_token');
+    _refreshToken = await storage.getItem('refresh_token');
+
+    expect(result).toBe(true);
+    expect(_accessToken).toBe('b1ad5fee-49bf-430a-9d6c-33bc9db6f4a3');
+    expect(_refreshToken).toBe('90bb4fa5-dcbf-41f0-b273-903b92f973d9');
+    expect(Session._expiry).toBe(17999);
+  });
+
+  test('#refreshAccessToken unauthorized', async ()=>{
+    fetch.configure({
+      fixturePath: './_fixtures/unauthorized/'
+    });
+
+    await StorageHelper.set('refresh_token', 'expired');
+
+    result = await DegelClient.refreshAccessToken();
+
+    expect(result).toBe(false);
   });
 
   test('#getCurrentUser authorized', async ()=> {
