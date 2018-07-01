@@ -6,6 +6,12 @@ class Session {
   // returns true when log in is sucessful
   // returns false otherwise
   static async logIn() {
+    result = await DegelClient.refreshAccessToken();
+    if (result == false) {
+      // failed to refresh the tokens. log out and try again.
+      return false;
+    }
+
     _user = await DegelClient.getCurrentUser();
 
     if (_user.id && _user.cip) {
@@ -29,5 +35,6 @@ class Session {
 }
 Session._id = 'undefined';
 Session._cip = 'undefined';
+Session._expiry = 10000;
 
 export { Session };
