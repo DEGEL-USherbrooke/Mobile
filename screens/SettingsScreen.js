@@ -2,9 +2,8 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import SettingsList from 'react-native-settings-list';
 import { I18n } from '../locales/i18n';
-import { signOut } from '../BL/session';
+import { Session } from '../BL/session';
 import { DegelClient } from '../BL/degelClient';
-import { StorageHelper } from '../BL/storageHelper';
 
 export default class SettingsScreen extends React.Component {
 
@@ -17,8 +16,6 @@ export default class SettingsScreen extends React.Component {
     await I18n.initAsync();
     this.props.navigation.setParams({title: I18n.t('SettingsScreen.title') });
 
-    this.cip = await StorageHelper.get('cip');
-    this.id = await StorageHelper.get('id');
     this.settingsState = await DegelClient.getSettingsStatus();
 
     this.setState({
@@ -61,13 +58,13 @@ export default class SettingsScreen extends React.Component {
           titleInfoStyle={styles.titleInfoStyle}
           hasNavArrow={false}
           onPress={ async () => {
-              signOut();
+              await Session.logOut();
               this.props.navigation.navigate('AuthLoading');
             }
           }
         />
         <SettingsList.Item
-          title={this.cip + ' - ' + this.id}
+          title={Session._cip + ' - ' + Session._id}
           titleStyle={{color:'grey', textAlign: 'center', fontSize: 12}}
           hasNavArrow={false}
         />

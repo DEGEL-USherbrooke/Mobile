@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 
 import { oauth_authorize_uri, CALLBACK_URI } from '../constants/endpoints';
-import { requestTokensWithCode } from '../BL/session';
+import { DegelClient } from '../BL/degelClient';
 
 export default class SignInScreen extends React.Component {
   static navigationOptions = {
@@ -62,7 +62,7 @@ export default class SignInScreen extends React.Component {
 
 
   _requestTokens = async (code) => {
-    await requestTokensWithCode(code);
+    await DegelClient.requestAndSaveAccessTokensWithCode(code);
     this.props.navigation.navigate('AuthLoading');
   }
 

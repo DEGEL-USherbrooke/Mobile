@@ -1,8 +1,10 @@
 import { StorageHelper } from './storageHelper';
-import { BASE_URL } from '../constants/endpoints';
+import { BASE_URL, oauth_token_uri, AUTHORIZE_HEADER } from '../constants/endpoints';
+import { Session } from './session';
 
 class DegelClient {
   static async authorizedFetch(url, method = 'POST', body = null) {
+    // retreive access token from local storage
     _accessToken = await StorageHelper.get('access_token');
 
     try {
@@ -25,26 +27,40 @@ class DegelClient {
     return null;
   }
 
-  static async saveCurrentUser() {
+  static async requestAndSaveAccessTokensWithCode(code) {
+    response = await fetch(oauth_token_uri(code), {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        Authorization: 'Basic ' + AUTHORIZE_HEADER
+      }
+    });
+
+    responseJson = await response.json();
+
+    // save access and refresh tokens to local storage of thedevice
+    if (responseJson.access_token && responseJson.refresh_token) {
+      await StorageHelper.set('access_token', responseJson.access_token);
+      await StorageHelper.set('refresh_token', responseJson.refresh_token);
+    }
+
+  }
+
+  static async getCurrentUser() {
     currentUser = await this.authorizedFetch(BASE_URL + '/api/user/current', 'GET');
 
-    if (currentUser.cip !== undefined && currentUser.id !== undefined){
-      await StorageHelper.set('cip', currentUser.cip);
-      await StorageHelper.set('id', currentUser.id);
-    } else {
-      console.log("error : ");
-      console.log(currentUser);
+    return {
+      cip: currentUser.cip,
+      id: currentUser.id
     }
   }
 
   static async getSettingsStatus() {
-    _id = await StorageHelper.get('id');
-
-    if (_id == undefined) {
+    if (Session._id == undefined) {
       console.log('No user_id was set - please sign out');
     }
 
-    settingsStateResponse = await this.authorizedFetch(BASE_URL + '/api/user/' + _id + '/settings', 'GET');
+    settingsStateResponse = await this.authorizedFetch(BASE_URL + '/api/user/' + Session._id + '/settings', 'GET');
 
     settingsState = {
       notification: false
@@ -62,9 +78,8 @@ class DegelClient {
   }
 
   static async setSettingsStatus(notification = false) {
-    _id = await StorageHelper.get('id');
 
-    if (_id == undefined) {
+    if (Session._id == undefined) {
       console.log('No user_id was set - please sign out');
     }
 
@@ -75,7 +90,7 @@ class DegelClient {
     }
 
     response = await this.authorizedFetch(
-      BASE_URL + '/api/user/' + _id + '/settings',
+      BASE_URL + '/api/user/' + Session._id + '/settings',
       'POST',
       JSON.stringify(settingsState)
     );
