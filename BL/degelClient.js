@@ -1,6 +1,11 @@
 import { StorageHelper } from './storageHelper';
-import { BASE_URL, oauth_token_uri, oauth_refresh_uri, AUTHORIZE_HEADER } from '../constants/endpoints';
+import { BASE_URL, 
+  oauth_token_uri, 
+  oauth_refresh_uri, 
+  AUTHORIZE_HEADER, 
+  push_endpoint } from '../constants/endpoints';
 import { Session } from './session';
+import { Permissions, Notifications } from 'expo';
 
 class DegelClient {
   static async basicAuthFetch(url, method = 'POST', body = null) {
@@ -17,10 +22,10 @@ class DegelClient {
       return response.json();
 
     } catch (error) {
-      console.error(error);
+      return {};
     }
 
-    return null;
+    
   }
 
   static async requestAndSaveAccessTokensWithCode(code) {
@@ -86,10 +91,8 @@ class DegelClient {
       return response.json();
 
     } catch (error) {
-      console.error(error);
+      return {};
     }
-
-    return null;
   }
 
   static async getCurrentUser() {
@@ -142,6 +145,41 @@ class DegelClient {
     );
 
     console.log(response);
+  }
+
+  static async registerForPushNotificationsAsync() {
+    const { status: existingStatus } = await Permissions.getAsync(
+      Permissions.NOTIFICATIONS
+    );
+    
+    let finalStatus = existingStatus;
+
+    // only ask if permissions have not already been determined, because
+    // iOS won't necessarily prompt the user a second time.
+    if (existingStatus !== 'granted') {
+      // Android remote notification permissions are granted during the app
+      // install, so this will only ask on iOS
+      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+
+      finalStatus = status;
+    }
+
+    // Stop here if the user did not grant permissions
+    if (finalStatus !== 'granted') {
+      return;
+    }
+
+    // Get the token that uniquely identifies this device
+    let token = await Notifications.getExpoPushTokenAsync();
+
+    // POST the token to your backend server from where you can retrieve it to send push notifications.
+    console.log('expo notif token : ' + token);
+
+    return await this.authorizedFetch(
+      push_endpoint(Session._id), 
+      'POST', 
+      JSON.stringify({expoToken: token})
+    );
   }
 }
 

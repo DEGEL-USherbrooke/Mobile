@@ -16,9 +16,9 @@ describe('DegelClient fetch-vcr', () => {
     jest.mock('AsyncStorage', () => mockImpl);
   });
 
-  beforeEach(() => {
+  beforeEach(async () => {
     jest.restoreAllMocks(); // remove spy implementation between tests
-    storage.clear();
+    await storage.clear();
     Session._expiry = 10000;
   });
 
@@ -57,6 +57,7 @@ describe('DegelClient fetch-vcr', () => {
   });
 
   test('#refreshAccessToken ', async ()=>{
+    const consoleSpy = jest.spyOn(global.console, 'log').mockImplementation(() => { return null });
     fetch.configure({
       fixturePath: './_fixtures/authorized/'
     });
@@ -72,6 +73,7 @@ describe('DegelClient fetch-vcr', () => {
     expect(_accessToken).toBe('b1ad5fee-49bf-430a-9d6c-33bc9db6f4a3');
     expect(_refreshToken).toBe('90bb4fa5-dcbf-41f0-b273-903b92f973d9');
     expect(Session._expiry).toBe(17999);
+     expect(consoleSpy).toHaveBeenCalledTimes(3);
   });
 
   test('#refreshAccessToken unauthorized', async ()=>{
@@ -192,10 +194,10 @@ describe('DegelClient jest-fetch-mock', () => {
     jest.mock('AsyncStorage', () => mockImpl);
   });
 
-  beforeEach(() => {
+  beforeEach(async () => {
     jest.resetAllMocks();
     jest.restoreAllMocks();
-    storage.clear();
+    await storage.clear();
   });
 
   test('#setSettingsStatus notification mobile = true', async ()=> {
@@ -223,4 +225,155 @@ describe('DegelClient jest-fetch-mock', () => {
     expect(fetch.mock.calls[0][1].body).toEqual(JSON.stringify({"notifications":{"mobile":false}}));
     expect(consoleSpy).toHaveBeenCalledTimes(1);
   });
+});
+
+
+import { Permissions, Notifications } from 'expo';
+import { push_endpoint } from '../../constants/endpoints';
+
+describe('registerForPushNotificationsAsync', () => {
+  beforeAll(() => {
+    // mock http requests to verify parameters
+    global.fetch = require('jest-fetch-mock');
+  });
+
+  // general data mocks
+  const expoToken = 'ExponentPushToken[brvkU3IvlmdlP1DihK6Sty]';
+  const permissionGrantedPayload = { status: 'granted' };
+  const permissionDeniedPayload = { status: 'denied' };
+  Session._id = 'idtoken';
+
+  beforeEach(() => {
+    jest.resetAllMocks();
+    jest.restoreAllMocks();
+    jest.spyOn(global.console, 'log').mockImplementation(() => { return null }); // remove console print
+  })
+
+  test('Sends registration token when permission is granted by the user', async () => {
+    // setup method monkey patching (spies)
+    const permissionGetAsyncSpy = jest.spyOn(Permissions, "getAsync").mockImplementation(() => {
+      return permissionDeniedPayload;
+    });
+
+    const permissionAskAsyncSpy = jest.spyOn(Permissions, "askAsync").mockImplementation(() => {
+      return permissionGrantedPayload;
+    });
+
+    const notifGetExpoTokenSpy = jest.spyOn(Notifications, "getExpoPushTokenAsync").mockImplementation(() => {
+      return expoToken;
+    });
+
+    // call the function
+    await DegelClient.registerForPushNotificationsAsync();
+
+    // expectations
+    expect(permissionGetAsyncSpy).toHaveBeenCalledTimes(1);
+    expect(permissionAskAsyncSpy).toHaveBeenCalledTimes(1);
+    expect(notifGetExpoTokenSpy).toHaveBeenCalledTimes(1);
+
+    expect(fetch.mock.calls.length).toEqual(1);
+    expect(fetch.mock.calls[0][0]).toEqual(push_endpoint(Session._id));
+    expect(fetch.mock.calls[0][1].body).toEqual(
+      JSON.stringify({
+        expoToken: expoToken,
+      })
+    );
+  });
+
+  test('Sends registration token when permission is already granted', async () => {
+    // setup method monkey patching (spies)
+    const permissionGetAsyncSpy = jest.spyOn(Permissions, "getAsync").mockImplementation(() => {
+      return permissionGrantedPayload;
+    });
+
+    const notifGetExpoTokenSpy = jest.spyOn(Notifications, "getExpoPushTokenAsync").mockImplementation(() => {
+      return expoToken;
+    });
+
+    // call the function
+    await DegelClient.registerForPushNotificationsAsync();
+
+    // expectations
+    expect(permissionGetAsyncSpy).toHaveBeenCalledTimes(1);
+    expect(notifGetExpoTokenSpy).toHaveBeenCalledTimes(1);
+
+    expect(fetch.mock.calls.length).toEqual(1);
+    expect(fetch.mock.calls[0][0]).toEqual(push_endpoint(Session._id));
+    expect(fetch.mock.calls[0][1].body).toEqual(
+      JSON.stringify({
+        expoToken: expoToken,
+      })
+    );
+  });
+
+
+  test('Does not send registration token when permission is denied by the user', async () => {
+    // setup method monkey patching (spies)
+    const permissionGetAsyncSpy = jest.spyOn(Permissions, "getAsync").mockImplementation(() => {
+      return permissionDeniedPayload;
+    });
+
+    const permissionAskAsyncSpy = jest.spyOn(Permissions, "askAsync").mockImplementation(() => {
+      return permissionDeniedPayload;
+    });
+
+    // call the function
+    await DegelClient.registerForPushNotificationsAsync();
+
+    // expectations
+    expect(permissionGetAsyncSpy).toHaveBeenCalledTimes(1);
+    expect(permissionAskAsyncSpy).toHaveBeenCalledTimes(1);
+    expect(fetch.mock.calls.length).toEqual(0);
+  });
+
+
+})
+
+describe('registerForPushNotificationsAsync fetch-vcr', ()=> {
+
+  // general data mocks
+  const expoToken = 'ExponentPushToken[brvkU3IvlmdlP1DihK6Sty]';
+  const permissionGrantedPayload = { status: 'granted' };
+  const permissionDeniedPayload = { status: 'denied' };
+  Session._id = 'e4130aaa-f585-4564-b7e6-dce37e58166c';
+
+
+  beforeAll(() => {
+    // record http calls and replay them
+    process.env['VCR_MODE'] = 'cache';
+    global.fetch = require('fetch-vcr');
+
+  });
+
+  beforeEach(() => {
+    jest.resetAllMocks();
+    jest.restoreAllMocks();
+    jest.spyOn(global.console, 'log').mockImplementation(() => { return null }); // remove console print
+  })
+
+  test('registerForPushNotificationsAsync authorized', async ()=>{
+    await StorageHelper.set('access_token', 'cdb58cef-de9e-4545-b1a6-02b2cacea541');
+    fetch.configure({
+      fixturePath: './_fixtures/authorized/'
+    });
+    
+    // setup method monkey patching (spies)
+    const permissionGetAsyncSpy = jest.spyOn(Permissions, "getAsync").mockImplementation(() => {
+      return permissionDeniedPayload;
+    });
+
+    const permissionAskAsyncSpy = jest.spyOn(Permissions, "askAsync").mockImplementation(() => {
+      return permissionGrantedPayload;
+    });
+
+    const notifGetExpoTokenSpy = jest.spyOn(Notifications, "getExpoPushTokenAsync").mockImplementation(() => {
+      return expoToken;
+    });
+
+    _response = await DegelClient.registerForPushNotificationsAsync();
+
+    expect(_response).toEqual({"expoToken":"ExponentPushToken[brvkU3IvlmdlP1DihK6Sty]"});
+
+  });
+
 });
