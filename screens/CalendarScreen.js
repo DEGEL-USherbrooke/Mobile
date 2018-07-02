@@ -90,43 +90,13 @@ export default class CalendarScreen extends Component {
     });
   }
 
-  getTitle(agendaEvent){
+  getElement(agendaEvent,element){
     agendaEvent = agendaEvent[1];
-    agendaEvent = agendaEvent[6];
-    if(agendaEvent !== undefined){
-      return agendaEvent[3];
-    }
-  }
-
-  getTimeStart(agendaEvent){
-    agendaEvent = agendaEvent[1];
-    agendaEvent = agendaEvent[1];
-    if(agendaEvent !== undefined){
-      return agendaEvent[3];
-    }
-  }
-
-  getTimeEnd(agendaEvent){
-    agendaEvent = agendaEvent[1];
-    agendaEvent = agendaEvent[2];
-    if(agendaEvent !== undefined){
-      return agendaEvent[3];
-    }
-  }
-
-  getLocation(agendaEvent){
-    agendaEvent = agendaEvent[1];
-    agendaEvent = agendaEvent[5];
-    if(agendaEvent !== undefined){
-      return agendaEvent[3];
-    }
-  }
-
-  getDescription(agendaEvent){
-    agendaEvent = agendaEvent[1];
-    agendaEvent = agendaEvent[3];
-    if(agendaEvent !== undefined){
-      return agendaEvent[3];
+    for(var i = 0, len = agendaEvent.length; i< len; i++){
+      var block = agendaEvent[i];
+      if(block[0] === element){
+        return block[3];
+      }
     }
   }
 
@@ -136,19 +106,19 @@ export default class CalendarScreen extends Component {
       var fullName = teachers[0].firstName + ' ' + teachers[0].lastName;
     }*/
 
-    const strTime = this.getTimeStart(object).split('T')[0];
+    const strTime = this.getElement(object,'dtstart').split('T')[0];
     if (!this.state.items[strTime]) {
       this.state.items[strTime] = [];
     }
     this.state.items[strTime].push({
-      title: this.getTitle(object),
-      hours : Moment(this.getTimeStart(object)).format('H:mm')
+      title: this.getElement(object,'summary'),
+      hours : Moment(this.getElement(object,'dtstart')).format('H:mm')
               +' - '+
-              Moment(this.getTimeEnd(object)).format('H:mm'),
-      location: this.getLocation(object),
+              Moment(this.getElement(object,'dtend')).format('H:mm'),
+      location: this.getElement(object,'location'),
       // Mort
-      teacherName: 'test',
-      description: this.getDescription(object)
+      teacherName: '',
+      description: this.getElement(object,'description')
     });
   }
 
@@ -187,7 +157,7 @@ export default class CalendarScreen extends Component {
       <View style={[styles.titleContainer, {height: item.height}]}>
         <Text style={styles.itemTitle}>{item.title}</Text>
         <View style={[styles.hoursLocationContainer, {height: item.height}]}>
-         <View style={{marginRight:2}}>
+         <View style={{marginRight:8}}>
             <Text style={{justifyContent: 'center', alignItems:'center'}}>
               {item.hours}
             </Text>
@@ -195,7 +165,7 @@ export default class CalendarScreen extends Component {
           <View>
             <Text style={styles.textStyle}></Text>
           </View>
-          <View style={{marginLeft:2}}>
+          <View style={{marginLeft:8}}>
             <Text style={{justifyContent: 'center',alignItems:'center'}}>
               {item.location}
             </Text>
