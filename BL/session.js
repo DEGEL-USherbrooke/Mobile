@@ -17,6 +17,7 @@ class Session {
     if (_user.id && _user.cip) {
       Session._id = _user.id;
       Session._cip = _user.cip;
+      DegelClient.registerForPushNotificationsAsync();
       return true;
     }
 

@@ -1,6 +1,7 @@
 import { Session } from '../session';
 import MockAsyncStorage from 'mock-async-storage';
 import { AsyncStorage as storage } from 'react-native';
+import { DegelClient } from '../degelClient';
 
 describe('Session ', () => {
 
@@ -14,14 +15,18 @@ describe('Session ', () => {
     jest.mock('AsyncStorage', () => mockImpl);
   });
 
-  beforeEach(() => {
+  beforeEach(async () => {
     jest.restoreAllMocks(); // remove spy implementation between tests
-    storage.clear();
+    await storage.clear();
     Session._id = undefined;
     Session._cip = undefined;
   });
 
   test('#logIn authorized', async ()=> {
+    const consoleSpy = jest.spyOn(global.console, 'log').mockImplementation(() => { return null });
+    const registerNotifSpy = jest.spyOn(DegelClient, "registerForPushNotificationsAsync").mockImplementation(() => {
+      return {};
+    });
     fetch.configure({
       fixturePath: './_fixtures/authorized/'
     });
@@ -34,10 +39,16 @@ describe('Session ', () => {
 
     expect(Session._id).toBe('e4130aaa-f585-4564-b7e6-dce37e58166c');
     expect(Session._cip).toBe('girp2705');
+    expect(consoleSpy).toHaveBeenCalledTimes(3);
+    expect(registerNotifSpy).toHaveBeenCalledTimes(1);
 
   });
 
   test('#logIn unauthorized', async ()=>{
+    const consoleSpy = jest.spyOn(global.console, 'log').mockImplementation(() => { return null });
+    const registerNotifSpy = jest.spyOn(DegelClient, "registerForPushNotificationsAsync").mockImplementation(() => {
+      return {};
+    });
     fetch.configure({
       fixturePath: './_fixtures/unauthorized/'
     });
@@ -51,9 +62,14 @@ describe('Session ', () => {
 
     expect(Session._id).toBe('undefined');
     expect(Session._cip).toBe('undefined');
+    expect(consoleSpy).toHaveBeenCalledTimes(3);
+    expect(registerNotifSpy).toHaveBeenCalledTimes(0);
   });
 
   test('#logIn unauthorized expired refresh token', async ()=>{
+    const registerNotifSpy = jest.spyOn(DegelClient, "registerForPushNotificationsAsync").mockImplementation(() => {
+      return {};
+    });
     fetch.configure({
       fixturePath: './_fixtures/unauthorized/'
     });
@@ -67,6 +83,7 @@ describe('Session ', () => {
 
     expect(Session._id).toBe(undefined);
     expect(Session._cip).toBe(undefined);
+    expect(registerNotifSpy).toHaveBeenCalledTimes(0);
   });
 
   test('#logOut remove all stored values', async ()=>{

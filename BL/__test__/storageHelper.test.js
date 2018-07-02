@@ -8,9 +8,9 @@ describe('StorageHelper', () => {
     jest.mock('AsyncStorage', () => mockImpl);
   });
 
-  beforeEach(() => {
+  beforeEach(async () => {
     jest.restoreAllMocks(); // remove spy implementation between tests
-    storage.clear();
+    await storage.clear();
   })
 
   test('#set save the value when the key does not exists', async () => {
