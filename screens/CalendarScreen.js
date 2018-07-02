@@ -61,36 +61,13 @@ export default class CalendarScreen extends Component {
     // Get all events
     var events = backEndData[2];
     events = events.slice(1);
-
-    backEndData = this.orderBackEndDatas(events);
-
-    for(var i = 0, len = backEndData.length-100; i< len; i++){
-      var temp = backEndData[i];
-      temp = temp[1];
-      temp = temp[1];
-      temp = temp[3];
-      console.log(temp);
-    }
-    // JAI TOUT LES EVENTS EN ORDRE -> FAIRE CREATE EVENTS POUR CHACUN MNT
-
-    customData = this.orderDatas(customData);
-    for(var i = 0, len = customData.length; i< len; i++){
-      this.createEvents(customData[i]);
+    eventsOrdered = this.orderEvents(events);
+    for(var i = 0, len = eventsOrdered.length; i< len; i++){
+      this.createEvents(eventsOrdered[i]);
     }
   }
 
-  orderDatas(datas){
-    return datas.sort(function(a,b){
-      // modele date from json 2018-06-05T13:30:00-0400
-      if (Moment(a.start).isAfter(Moment(b.start))){
-        return 1;
-      } else {
-        return -1;
-      }
-    });
-  }
-
-  orderBackEndDatas(datas){
+  orderEvents(datas){
     return datas.sort(function(a,b){
       a = a[1];
       a = a[1];
@@ -113,21 +90,65 @@ export default class CalendarScreen extends Component {
     });
   }
 
+  getTitle(agendaEvent){
+    agendaEvent = agendaEvent[1];
+    agendaEvent = agendaEvent[6];
+    if(agendaEvent !== undefined){
+      return agendaEvent[3];
+    }
+  }
+
+  getTimeStart(agendaEvent){
+    agendaEvent = agendaEvent[1];
+    agendaEvent = agendaEvent[1];
+    if(agendaEvent !== undefined){
+      return agendaEvent[3];
+    }
+  }
+
+  getTimeEnd(agendaEvent){
+    agendaEvent = agendaEvent[1];
+    agendaEvent = agendaEvent[2];
+    if(agendaEvent !== undefined){
+      return agendaEvent[3];
+    }
+  }
+
+  getLocation(agendaEvent){
+    agendaEvent = agendaEvent[1];
+    agendaEvent = agendaEvent[5];
+    if(agendaEvent !== undefined){
+      return agendaEvent[3];
+    }
+  }
+
+  getDescription(agendaEvent){
+    agendaEvent = agendaEvent[1];
+    agendaEvent = agendaEvent[3];
+    if(agendaEvent !== undefined){
+      return agendaEvent[3];
+    }
+  }
+
   createEvents(object){
-    var teachers = object['teachers'];
+    /*var teachers = object['teachers'];
     if(teachers.length > 0){
       var fullName = teachers[0].firstName + ' ' + teachers[0].lastName;
-    }
-    const strTime = object.start.split('T')[0];
+    }*/
+
+    const strTime = this.getTimeStart(object).split('T')[0];
     if (!this.state.items[strTime]) {
       this.state.items[strTime] = [];
     }
     this.state.items[strTime].push({
-      title: object.title,
-      hours: Moment(object.start).format('H:mm') + '-' +Moment(object.end).format('H:mm'),
-      location: object.location,
-      teacherName: fullName,
-      description: object.description
+      title: this.getTitle(object),
+      hours : Moment(this.getTimeStart(object)).format('H:mm')
+              +' - '+
+              Moment(this.getTimeEnd(object)).format('H:mm'),
+      location: this.getLocation(object),
+      // Mort
+      teacherName: 'test',
+      description: this.getDescription(object)
     });
   }
 
@@ -146,7 +167,7 @@ export default class CalendarScreen extends Component {
 
   loadItems(day) {
     setTimeout(() => {
-      for (let i = -15; i < 85; i++) {
+      for (let i = 0; i < 14; i++) {
         const time = day.timestamp + i * 24 * 60 * 60 * 1000;
         const strTime = this.timeToString(time);
         if (!this.state.items[strTime]) {
