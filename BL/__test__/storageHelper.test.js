@@ -8,8 +8,9 @@ describe('StorageHelper', () => {
     jest.mock('AsyncStorage', () => mockImpl);
   });
 
-  beforeEach(() => {
-    storage.clear();
+  beforeEach(async () => {
+    jest.restoreAllMocks(); // remove spy implementation between tests
+    await storage.clear();
   })
 
   test('#set save the value when the key does not exists', async () => {
@@ -29,6 +30,26 @@ describe('StorageHelper', () => {
     expect(value).toBe('newValue');
     expect(value).toBeTruthy();
     expect(storageRemoveSpy).toHaveBeenCalledTimes(1);
+  });
+
+  test('#set does not save undefined values', async () => {
+    const consoleSpy = jest.spyOn(global.console, 'log').mockImplementation(() => { return null });
+    const asyncStorageSpy = jest.spyOn(storage, "setItem");
+
+    await StorageHelper.set('myKey', undefined);
+
+    expect(asyncStorageSpy).not.toHaveBeenCalled();
+    expect(consoleSpy).toHaveBeenCalledTimes(1);
+  });
+
+  test('#set does not save null values', async () => {
+    const consoleSpy = jest.spyOn(global.console, 'log').mockImplementation(() => { return null });
+    const asyncStorageSpy = jest.spyOn(storage, "setItem");
+
+    await StorageHelper.set('myKey', null);
+
+    expect(asyncStorageSpy).not.toHaveBeenCalled();
+    expect(consoleSpy).toHaveBeenCalledTimes(1);
   });
 
   test('#get returns the value', async () => {

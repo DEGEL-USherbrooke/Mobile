@@ -2,6 +2,11 @@ import { AsyncStorage } from 'react-native';
 
 class StorageHelper {
   static async set(name, value) {
+    if (value === undefined || value === null) {
+      console.log('#StorageHelper.set cannot save key ' + name + ' because it is undefined or null. Aborting.');
+      return;
+    }
+
     item = await AsyncStorage.getItem(name);
 
     if (item) {

@@ -1,5 +1,3 @@
-const PUSH_ENDPOINT = '127.0.0.1/';
-
 // oauth construction
 const BASE_URL = 'https://s6iprojet02.gel.usherbrooke.ca';
 const OAUTH_AUTHORIZE_URI = BASE_URL + '/oauth/authorize';
@@ -24,8 +22,21 @@ function oauth_token_uri(code) {
           + '&redirect_uri=' + CALLBACK_URI;
 }
 
+function oauth_refresh_uri(refresh_token) {
+  return OAUTH_TOKEN_URI
+          + '?grant_type=refresh_token'
+          + '&client_id=' + CLIENT_ID
+          + '&refresh_token=' + refresh_token;
+}
+
+function push_endpoint(user_id) {
+  return BASE_URL
+          + '/api/user/'
+          + user_id
+          + '/notification/register'
+}
+
 module.exports = {
-  PUSH_ENDPOINT,
   BASE_URL,
   OAUTH_AUTHORIZE_URI,
   OAUTH_TOKEN_URI,
@@ -33,5 +44,7 @@ module.exports = {
   CALLBACK_URI,
   AUTHORIZE_HEADER,
   oauth_authorize_uri,
-  oauth_token_uri
+  oauth_token_uri,
+  oauth_refresh_uri,
+  push_endpoint
 }

@@ -1,10 +1,80 @@
 import { StorageHelper } from './storageHelper';
-import { BASE_URL } from '../constants/endpoints';
+import { BASE_URL, 
+  oauth_token_uri, 
+  oauth_refresh_uri, 
+  AUTHORIZE_HEADER, 
+  push_endpoint } from '../constants/endpoints';
+import { Session } from './session';
+import { Permissions, Notifications } from 'expo';
 
 class DegelClient {
+  static async basicAuthFetch(url, method = 'POST', body = null) {
+    try {
+      let response = await fetch(url, {
+        method: method,
+        headers: {
+          Accept: 'application/json',
+          Authorization: 'Basic ' + AUTHORIZE_HEADER,
+        },
+        body: body
+      });
 
-  // todo : parametrize body and method
+      return response.json();
+
+    } catch (error) {
+      return {};
+    }
+
+    
+  }
+
+  static async requestAndSaveAccessTokensWithCode(code) {
+    console.log('Code : ' + code)
+    _tokens = await this.basicAuthFetch(oauth_token_uri(code));
+
+    // save access and refresh tokens to local storage of the device
+    if (_tokens.access_token && _tokens.refresh_token) {
+      console.log('access token : ' + _tokens.access_token);
+      console.log('refresh token : ' + _tokens.refresh_token);
+      await StorageHelper.set('access_token', _tokens.access_token);
+      await StorageHelper.set('refresh_token', _tokens.refresh_token);
+      Session._expiry = _tokens.expires_in;
+    }
+
+  }
+
+  // returns  true if the refresh is successful
+  //          false if the refresh fails
+  static async refreshAccessToken() {
+    _refreshToken = await StorageHelper.get('refresh_token');
+
+    if (_refreshToken == undefined) {
+      console.log('refresh token does not exists');
+      return false;
+    }
+
+    _tokens = await this.basicAuthFetch(oauth_refresh_uri(_refreshToken));
+
+        // save access and refresh tokens to local storage of the device
+    if (_tokens.access_token && _tokens.refresh_token) {
+      console.log("Refreshed tokens");
+      console.log('access token : ' + _tokens.access_token);
+      console.log('refresh token : ' + _tokens.refresh_token);
+
+      await StorageHelper.set('access_token', _tokens.access_token);
+      await StorageHelper.set('refresh_token', _tokens.refresh_token);
+      Session._expiry = _tokens.expires_in;
+
+      return true;
+    }
+
+    return false;
+  }
+
+  // ACCESS API PROTECTED REGION ON DEGEL SERVER
+
   static async authorizedFetch(url, method = 'POST', body = null) {
+    // retreive access token from local storage
     _accessToken = await StorageHelper.get('access_token');
 
     try {
@@ -21,25 +91,25 @@ class DegelClient {
       return response.json();
 
     } catch (error) {
-      console.error(error);
+      return {};
     }
-
-    return null;
   }
 
-  static async saveCurrentUser() {
+  static async getCurrentUser() {
     currentUser = await this.authorizedFetch(BASE_URL + '/api/user/current', 'GET');
-    if (currentUser.cip !== undefined && currentUser.id !== undefined){
-      await StorageHelper.set('cip', currentUser.cip);
-      await StorageHelper.set('id', currentUser.id);
-    } else {
-      console.log("error : " + currentUser);
+
+    return {
+      cip: currentUser.cip,
+      id: currentUser.id
     }
   }
 
   static async getSettingsStatus() {
-    _id = await StorageHelper.get('id');
-    settingsStateResponse = await this.authorizedFetch(BASE_URL + '/api/user/' + _id + '/settings', 'GET');
+    if (Session._id == undefined) {
+      console.log('No user_id was set - please sign out');
+    }
+
+    settingsStateResponse = await this.authorizedFetch(BASE_URL + '/api/user/' + Session._id + '/settings', 'GET');
 
     settingsState = {
       notification: false
@@ -57,7 +127,10 @@ class DegelClient {
   }
 
   static async setSettingsStatus(notification = false) {
-    _id = await StorageHelper.get('id');
+
+    if (Session._id == undefined) {
+      console.log('No user_id was set - please sign out');
+    }
 
     settingsState = {
       "notifications": {
@@ -66,12 +139,47 @@ class DegelClient {
     }
 
     response = await this.authorizedFetch(
-      BASE_URL + '/api/user/' + _id + '/settings',
+      BASE_URL + '/api/user/' + Session._id + '/settings',
       'POST',
       JSON.stringify(settingsState)
     );
 
     console.log(response);
+  }
+
+  static async registerForPushNotificationsAsync() {
+    const { status: existingStatus } = await Permissions.getAsync(
+      Permissions.NOTIFICATIONS
+    );
+    
+    let finalStatus = existingStatus;
+
+    // only ask if permissions have not already been determined, because
+    // iOS won't necessarily prompt the user a second time.
+    if (existingStatus !== 'granted') {
+      // Android remote notification permissions are granted during the app
+      // install, so this will only ask on iOS
+      const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+
+      finalStatus = status;
+    }
+
+    // Stop here if the user did not grant permissions
+    if (finalStatus !== 'granted') {
+      return;
+    }
+
+    // Get the token that uniquely identifies this device
+    let token = await Notifications.getExpoPushTokenAsync();
+
+    // POST the token to your backend server from where you can retrieve it to send push notifications.
+    console.log('expo notif token : ' + token);
+
+    return await this.authorizedFetch(
+      push_endpoint(Session._id), 
+      'POST', 
+      JSON.stringify({expoToken: token})
+    );
   }
 }
 

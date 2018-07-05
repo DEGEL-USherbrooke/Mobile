@@ -1,42 +1,41 @@
 import { oauth_token_uri, AUTHORIZE_HEADER } from '../constants/endpoints';
 import { StorageHelper } from './storageHelper';
+import { DegelClient } from './degelClient';
 
-async function requestTokensWithCode(code) {
-  console.log("requestTokensWithCode : " + code);
+class Session {
+  // returns true when log in is sucessful
+  // returns false otherwise
+  static async logIn() {
+    result = await DegelClient.refreshAccessToken();
+    if (result == false) {
+      // failed to refresh the tokens. log out and try again.
+      return false;
+    }
 
-  try {
+    _user = await DegelClient.getCurrentUser();
 
-    let response = await fetch(oauth_token_uri(code), {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        Authorization: 'Basic ' + AUTHORIZE_HEADER
-      }
-    });
+    if (_user.id && _user.cip) {
+      Session._id = _user.id;
+      Session._cip = _user.cip;
+      DegelClient.registerForPushNotificationsAsync();
+      return true;
+    }
 
-    let responseJson = await response.json();
+    Session._id = 'undefined';
+    Session._cip = 'undefined';
+    return false;
 
-    // extract tokens
-    accessToken = responseJson.access_token;
-    refreshToken = responseJson.refresh_token;
+  }
 
-    // save tokens to storage
-    await StorageHelper.set('access_token', accessToken);
-    await StorageHelper.set('refresh_token', refreshToken);
-
-  } catch (error) {
-    console.error(error);
+  static async logOut() {
+    Session._id = 'undefined';
+    Session._cip = 'undefined';
+    await StorageHelper.remove('access_token');
+    await StorageHelper.remove('refresh_token');
   }
 }
+Session._id = 'undefined';
+Session._cip = 'undefined';
+Session._expiry = 10000;
 
-async function signOut() {
-  await StorageHelper.remove('access_token');
-  await StorageHelper.remove('refresh_token');
-  await StorageHelper.remove('cip');
-  await StorageHelper.remove('id');
-}
-
-module.exports = { 
-  requestTokensWithCode,
-  signOut
-};
+export { Session };
