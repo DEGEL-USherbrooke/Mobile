@@ -181,10 +181,6 @@ class DegelClient {
       JSON.stringify({expoToken: token})
     );
   }
-
-  static async setCalendarKey(){
-    calendarKeyresponse = await this.authorizedFetch(BASE_URL + '/api/user/'+Session._id+'/calendar/key', 'POST');
-    
-  }
 }
+
 export { DegelClient };
