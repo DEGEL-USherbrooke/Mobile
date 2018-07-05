@@ -1,8 +1,8 @@
 import { StorageHelper } from './storageHelper';
-import { BASE_URL, 
-  oauth_token_uri, 
-  oauth_refresh_uri, 
-  AUTHORIZE_HEADER, 
+import { BASE_URL,
+  oauth_token_uri,
+  oauth_refresh_uri,
+  AUTHORIZE_HEADER,
   push_endpoint } from '../constants/endpoints';
 import { Session } from './session';
 import { Permissions, Notifications } from 'expo';
@@ -25,7 +25,7 @@ class DegelClient {
       return {};
     }
 
-    
+
   }
 
   static async requestAndSaveAccessTokensWithCode(code) {
@@ -151,7 +151,7 @@ class DegelClient {
     const { status: existingStatus } = await Permissions.getAsync(
       Permissions.NOTIFICATIONS
     );
-    
+
     let finalStatus = existingStatus;
 
     // only ask if permissions have not already been determined, because
@@ -176,8 +176,8 @@ class DegelClient {
     console.log('expo notif token : ' + token);
 
     return await this.authorizedFetch(
-      push_endpoint(Session._id), 
-      'POST', 
+      push_endpoint(Session._id),
+      'POST',
       JSON.stringify({expoToken: token})
     );
   }

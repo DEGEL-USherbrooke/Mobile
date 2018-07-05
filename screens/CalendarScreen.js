@@ -56,16 +56,24 @@ export default class CalendarScreen extends Component {
     };
     // Todo Créer une fonction dans BL qui va importer le json du backend
     var customData = require('../assets/exemples.json');
-    customData = this.orderDatas(customData);
-    for(var i = 0, len = customData.length; i< len; i++){
-      this.createEvents(customData[i]);
+    var backEndData = require('../assets/calendar.json');
+
+    // Get all events
+    var events = backEndData[2];
+    events = events.slice(1);
+    eventsOrdered = this.orderEvents(events);
+    for(var i = 0, len = eventsOrdered.length; i< len; i++){
+      this.createEvents(eventsOrdered[i]);
     }
   }
 
-  orderDatas(datas){
+  orderEvents(datas){
     return datas.sort(function(a,b){
+      a = a[1][1][3];
+      b = b[1][1][3];
+
       // modele date from json 2018-06-05T13:30:00-0400
-      if (Moment(a.start).isAfter(Moment(b.start))){
+      if (Moment(a).isAfter(Moment(b))){
         return 1;
       } else {
         return -1;
@@ -73,21 +81,30 @@ export default class CalendarScreen extends Component {
     });
   }
 
-  createEvents(object){
-    var teachers = object['teachers'];
-    if(teachers.length > 0){
-      var fullName = teachers[0].firstName + ' ' + teachers[0].lastName;
+  getElement(agendaEvent,element){
+    agendaEvent = agendaEvent[1];
+    for(var i = 0, len = agendaEvent.length; i< len; i++){
+      var block = agendaEvent[i];
+      if(block[0] === element){
+        return block[3];
+      }
     }
-    const strTime = object.start.split('T')[0];
+  }
+
+  createEvents(object){
+    const strTime = this.getElement(object,'dtstart').split('T')[0];
+    var description = this.getElement(object,'description');
+    description = description.replace("</br>", "\n\n")
     if (!this.state.items[strTime]) {
       this.state.items[strTime] = [];
     }
     this.state.items[strTime].push({
-      title: object.title,
-      hours: Moment(object.start).format('H:mm') + '-' +Moment(object.end).format('H:mm'),
-      location: object.location,
-      teacherName: fullName,
-      description: object.description
+      title: this.getElement(object,'summary'),
+      hours : Moment(this.getElement(object,'dtstart')).format('H:mm')
+              +' - '+
+              Moment(this.getElement(object,'dtend')).format('H:mm'),
+      location: this.getElement(object,'location'),
+      description: description
     });
   }
 
@@ -106,7 +123,7 @@ export default class CalendarScreen extends Component {
 
   loadItems(day) {
     setTimeout(() => {
-      for (let i = -15; i < 85; i++) {
+      for (let i = 0; i < 14; i++) {
         const time = day.timestamp + i * 24 * 60 * 60 * 1000;
         const strTime = this.timeToString(time);
         if (!this.state.items[strTime]) {
@@ -126,7 +143,7 @@ export default class CalendarScreen extends Component {
       <View style={[styles.titleContainer, {height: item.height}]}>
         <Text style={styles.itemTitle}>{item.title}</Text>
         <View style={[styles.hoursLocationContainer, {height: item.height}]}>
-         <View style={{marginRight:2}}>
+         <View style={{marginRight:8}}>
             <Text style={{justifyContent: 'center', alignItems:'center'}}>
               {item.hours}
             </Text>
@@ -134,14 +151,13 @@ export default class CalendarScreen extends Component {
           <View>
             <Text style={styles.textStyle}></Text>
           </View>
-          <View style={{marginLeft:2}}>
+          <View style={{marginLeft:8}}>
             <Text style={{justifyContent: 'center',alignItems:'center'}}>
               {item.location}
             </Text>
           </View>
         </View>
         <View style={[styles.othersContainer, {height: item.height}]}>
-          <Text style={styles.itemTeacherName}>{item.teacherName}</Text>
           <Text style={styles.itemDescription}>{item.description}</Text>
         </View>
       </View>
