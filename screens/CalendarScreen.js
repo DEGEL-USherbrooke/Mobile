@@ -69,17 +69,8 @@ export default class CalendarScreen extends Component {
 
   orderEvents(datas){
     return datas.sort(function(a,b){
-      a = a[1];
-      a = a[1];
-      if(a !== undefined){
-        a = a[3];
-      }
-
-      b = b[1];
-      b = b[1];
-      if(b !== undefined){
-        b = b[3];
-      }
+      a = a[1][1][3];
+      b = b[1][1][3];
 
       // modele date from json 2018-06-05T13:30:00-0400
       if (Moment(a).isAfter(Moment(b))){
@@ -101,12 +92,9 @@ export default class CalendarScreen extends Component {
   }
 
   createEvents(object){
-    /*var teachers = object['teachers'];
-    if(teachers.length > 0){
-      var fullName = teachers[0].firstName + ' ' + teachers[0].lastName;
-    }*/
-
     const strTime = this.getElement(object,'dtstart').split('T')[0];
+    var description = this.getElement(object,'description');
+    description = description.replace("</br>", "\n\n")
     if (!this.state.items[strTime]) {
       this.state.items[strTime] = [];
     }
@@ -116,9 +104,7 @@ export default class CalendarScreen extends Component {
               +' - '+
               Moment(this.getElement(object,'dtend')).format('H:mm'),
       location: this.getElement(object,'location'),
-      // Mort
-      teacherName: '',
-      description: this.getElement(object,'description')
+      description: description
     });
   }
 
@@ -172,7 +158,6 @@ export default class CalendarScreen extends Component {
           </View>
         </View>
         <View style={[styles.othersContainer, {height: item.height}]}>
-          <Text style={styles.itemTeacherName}>{item.teacherName}</Text>
           <Text style={styles.itemDescription}>{item.description}</Text>
         </View>
       </View>
