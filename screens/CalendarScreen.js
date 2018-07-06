@@ -8,6 +8,8 @@ import {Agenda} from 'react-native-calendars';
 import Moment from 'moment';
 import { I18n } from '../locales/i18n';
 import { LocaleConfig } from 'react-native-calendars';
+import { Session } from '../BL/session';
+import { DegelClient } from '../BL/degelClient';
 
 LocaleConfig.locales['fr'] = {
   monthNames: ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'],
@@ -49,22 +51,24 @@ export default class CalendarScreen extends Component {
     this.setState({appIsReady: true }); // fix I18n https://github.com/xcarpentier/ex-react-native-i18n/issues/7
   }
 
+  async getCalendarEvents(){
+    await DegelClient.setCalendarKey();
+    await DegelClient.getCalendarEvents().then((calendarEvents) => {
+      var events = calendarEvents[2];
+      events = events.slice(1);
+      eventsOrdered = this.orderEvents(events);
+      for(var i = 0, len = eventsOrdered.length; i< len; i++){
+        this.createEvents(eventsOrdered[i]);
+      }
+    });
+  }
+
   constructor(props) {
     super(props);
+    var backEndData = this.getCalendarEvents();
     this.state = {
       items: {}
     };
-    // Todo Créer une fonction dans BL qui va importer le json du backend
-    var customData = require('../assets/exemples.json');
-    var backEndData = require('../assets/calendar.json');
-
-    // Get all events
-    var events = backEndData[2];
-    events = events.slice(1);
-    eventsOrdered = this.orderEvents(events);
-    for(var i = 0, len = eventsOrdered.length; i< len; i++){
-      this.createEvents(eventsOrdered[i]);
-    }
   }
 
   orderEvents(datas){
