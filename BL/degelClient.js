@@ -188,7 +188,7 @@ class DegelClient {
   }
 
   static async getCalendarEvents() {
-    return await this.authorizedFetch(BASE_URL + '/api/user/' + Session._id + '/calendar', 'GET');
+    return await this.authorizedFetch(BASE_URL + '/api/user/' + Session._id+'0' + '/calendar', 'GET');
   }
 
 }

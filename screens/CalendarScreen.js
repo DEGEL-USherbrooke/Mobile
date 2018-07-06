@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import {
   Text,
   View,
-  StyleSheet
+  StyleSheet,
+  Alert
 } from 'react-native';
 import {Agenda} from 'react-native-calendars';
 import Moment from 'moment';
@@ -54,11 +55,24 @@ export default class CalendarScreen extends Component {
   async getCalendarEvents(){
     await DegelClient.setCalendarKey();
     await DegelClient.getCalendarEvents().then((calendarEvents) => {
-      var events = calendarEvents[2];
-      events = events.slice(1);
-      eventsOrdered = this.orderEvents(events);
-      for(var i = 0, len = eventsOrdered.length; i< len; i++){
-        this.createEvents(eventsOrdered[i]);
+      if(calendarEvents.error === undefined){
+        var events = calendarEvents[2];
+        events = events.slice(1);
+        eventsOrdered = this.orderEvents(events);
+        for(var i = 0, len = eventsOrdered.length; i< len; i++){
+          this.createEvents(eventsOrdered[i]);
+        }
+      }else{
+        Alert.alert(
+          // TODO Internationaliser
+          // TODO décider action sur ok 
+          'Oups!',
+          'Un problème est survenu, veuillez réessayer plus tard.',
+          [
+            {text: 'OK', onPress: () => console.log('OK Pressed')},
+          ],
+          { cancelable: false }
+        )
       }
     });
   }
