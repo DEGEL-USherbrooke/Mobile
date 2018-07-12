@@ -182,11 +182,6 @@ class DegelClient {
     );
   }
 
-  static async setCalendarKey() {
-    //var setCalendarKeyResponse = await this.authorizedFetch(BASE_URL + '/api/user/' + Session._id + '/calendar/key', 'POST', "+r7p6vtD8HHX33YXJADSf4n6T6vct/6bIvF2Cn065oA=");
-    //console.log(setCalendarKeyResponse);
-  }
-
   static async getCalendarEvents() {
     return await this.authorizedFetch(BASE_URL + '/api/user/' + Session._id + '/calendar', 'GET');
   }
