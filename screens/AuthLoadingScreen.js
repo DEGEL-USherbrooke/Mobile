@@ -24,7 +24,7 @@ export default class AuthLoadingScreen extends React.Component {
       this.props.navigation.navigate('Main');
     }
     else {
-      Session.logOut();
+      await Session.logOut();
       this.props.navigation.navigate('Auth');
     }
 

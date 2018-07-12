@@ -25,11 +25,10 @@ class DegelClient {
       return {};
     }
 
-
   }
 
   static async requestAndSaveAccessTokensWithCode(code) {
-    console.log('Code : ' + code)
+    console.log('Code : ' + code);
     _tokens = await this.basicAuthFetch(oauth_token_uri(code));
 
     // save access and refresh tokens to local storage of the device
@@ -39,6 +38,10 @@ class DegelClient {
       await StorageHelper.set('access_token', _tokens.access_token);
       await StorageHelper.set('refresh_token', _tokens.refresh_token);
       Session._expiry = _tokens.expires_in;
+    }
+    else {
+      console.log('error : ');
+      console.log(_tokens);
     }
 
   }
@@ -179,6 +182,14 @@ class DegelClient {
       push_endpoint(Session._id),
       'POST',
       JSON.stringify({expoToken: token})
+    );
+  }
+
+  static async setCalendarToken(calendarToken) {
+    return await this.authorizedFetch(
+      BASE_URL + '/api/user/' + Session._id + '/calendar/key', 
+      'POST', 
+      JSON.stringify({value: calendarToken})
     );
   }
 

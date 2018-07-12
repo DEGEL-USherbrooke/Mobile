@@ -20,13 +20,21 @@ describe('Session ', () => {
     await storage.clear();
     Session._id = undefined;
     Session._cip = undefined;
+    Session._horariusToken = undefined;
   });
 
   test('#logIn authorized', async ()=> {
+    Session._horariusToken = "token";
+
     const consoleSpy = jest.spyOn(global.console, 'log').mockImplementation(() => { return null });
     const registerNotifSpy = jest.spyOn(DegelClient, "registerForPushNotificationsAsync").mockImplementation(() => {
       return {};
     });
+
+    const calendarTokenSetSpy = jest.spyOn(DegelClient, "setCalendarToken").mockImplementation(() => {
+      return {};
+    });
+
     fetch.configure({
       fixturePath: './_fixtures/authorized/'
     });
@@ -41,6 +49,7 @@ describe('Session ', () => {
     expect(Session._cip).toBe('girp2705');
     expect(consoleSpy).toHaveBeenCalledTimes(3);
     expect(registerNotifSpy).toHaveBeenCalledTimes(1);
+    expect(calendarTokenSetSpy).toHaveBeenCalledTimes(1);
 
   });
 

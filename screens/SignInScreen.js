@@ -63,7 +63,7 @@ export default class SignInScreen extends React.Component {
 
   _requestTokens = async (code) => {
     await DegelClient.requestAndSaveAccessTokensWithCode(code);
-    this.props.navigation.navigate('AuthLoading');
+    this.props.navigation.navigate('TokenHorarius');
   }
 
 }

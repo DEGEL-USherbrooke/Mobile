@@ -18,6 +18,11 @@ class Session {
       Session._id = _user.id;
       Session._cip = _user.cip;
       DegelClient.registerForPushNotificationsAsync();
+
+      if (Session._horariusToken) {
+        await DegelClient.setCalendarToken(Session._horariusToken);
+      }
+
       return true;
     }
 
@@ -37,5 +42,6 @@ class Session {
 Session._id = 'undefined';
 Session._cip = 'undefined';
 Session._expiry = 10000;
+Session._horariusToken = undefined;
 
 export { Session };

@@ -53,7 +53,6 @@ export default class CalendarScreen extends Component {
   }
 
   async getCalendarEvents(){
-    await DegelClient.setCalendarKey();
     await DegelClient.getCalendarEvents().then((calendarEvents) => {
       if(calendarEvents.error === undefined){
         var events = calendarEvents[2];
