@@ -9,7 +9,6 @@ import {
 
 import { oauth_authorize_uri, CALLBACK_URI } from '../constants/endpoints';
 import { DegelClient } from '../BL/degelClient';
-import { Session } from '../BL/session';
 
 export default class SignInScreen extends React.Component {
   static navigationOptions = {
@@ -64,8 +63,7 @@ export default class SignInScreen extends React.Component {
 
   _requestTokens = async (code) => {
     await DegelClient.requestAndSaveAccessTokensWithCode(code);
-    Session._casSignIn = true;
-    this.props.navigation.navigate('AuthLoading');
+    this.props.navigation.navigate('TokenHorarius');
   }
 
 }

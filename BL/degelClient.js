@@ -185,6 +185,14 @@ class DegelClient {
     );
   }
 
+  static async setCalendarToken(calendarToken) {
+    return await this.authorizedFetch(
+      BASE_URL + '/api/user/' + Session._id + '/calendar/key', 
+      'POST', 
+      JSON.stringify({value: calendarToken})
+    );
+  }
+
   static async getCalendarEvents() {
     return await this.authorizedFetch(BASE_URL + '/api/user/' + Session._id + '/calendar', 'GET');
   }
