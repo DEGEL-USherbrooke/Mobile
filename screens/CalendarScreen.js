@@ -63,11 +63,11 @@ export default class CalendarScreen extends Component {
           this.createEvents(eventsOrdered[i]);
         }
       }else{
+        console.log(calendarEvents);
         Alert.alert(
-          // TODO Internationaliser
-          // TODO décider action sur ok 
+          // TODO décider action sur ok, TUER qqn au hasard?
           'Oups!',
-          'Un problème est survenu, veuillez réessayer plus tard.',
+          I18n.t('CalendarScreen.errorMessage'),
           [
             {text: 'OK', onPress: () => console.log('OK Pressed')},
           ],

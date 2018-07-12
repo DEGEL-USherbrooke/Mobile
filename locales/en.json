@@ -1,6 +1,7 @@
 {
   "CalendarScreen": {
-    "title": "Calendar"
+    "title": "Calendar",
+    "errorMessage" : "There was a problem, please try again later."
   },
   "SettingsScreen": {
     "title": "Settings",
