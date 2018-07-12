@@ -21,10 +21,15 @@ export default class AuthLoadingScreen extends React.Component {
     isAuthorizedToLogIn = await Session.logIn();
 
     if (isAuthorizedToLogIn) {
-      this.props.navigation.navigate('Main');
+      if (Session._casSignIn) {
+        this.props.navigation.navigate('TokenHorarius');
+      }
+      else {
+        this.props.navigation.navigate('Main');
+      }
     }
     else {
-      Session.logOut();
+      await Session.logOut();
       this.props.navigation.navigate('Auth');
     }
 

@@ -5,6 +5,7 @@ const OAUTH_TOKEN_URI = BASE_URL + '/oauth/token';
 const CLIENT_ID = 'R9HZLN7GMLET8PB7JQWJ963N9A5ML7';
 const CALLBACK_URI = BASE_URL + '/oauth/callback';
 const AUTHORIZE_HEADER = 'UjlIWkxON0dNTEVUOFBCN0pRV0o5NjNOOUE1TUw3Og==';
+const HORARIUS_URL = 'https://www.gel.usherbrooke.ca/horarius/rest/events/key';
 
 function oauth_authorize_uri(state) {
   return OAUTH_AUTHORIZE_URI
@@ -37,6 +38,7 @@ function push_endpoint(user_id) {
 }
 
 module.exports = {
+  HORARIUS_URL,
   BASE_URL,
   OAUTH_AUTHORIZE_URI,
   OAUTH_TOKEN_URI,

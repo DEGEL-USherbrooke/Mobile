@@ -53,7 +53,7 @@ describe('DegelClient fetch-vcr', () => {
     expect(_accessToken).toBe(undefined);
     expect(_refreshToken).toBe(undefined);
     expect(Session._expiry).toBe(10000);
-    expect(consoleSpy).toHaveBeenCalledTimes(1);
+    expect(consoleSpy).toHaveBeenCalledTimes(3);
   });
 
   test('#refreshAccessToken ', async ()=>{

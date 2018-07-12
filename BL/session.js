@@ -37,5 +37,6 @@ class Session {
 Session._id = 'undefined';
 Session._cip = 'undefined';
 Session._expiry = 10000;
+Session._casSignIn = false;
 
 export { Session };
