@@ -21,7 +21,11 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false,
+      "bundleIdentifier" : "ca.usherbrooke.gel.s6igitlab"
+    },
+    "android" : {
+      "package" : "ca.usherbrooke.gel.s6igitlab"
     }
   }
 }
