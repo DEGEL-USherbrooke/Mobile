@@ -63,7 +63,6 @@ export default class CalendarScreen extends Component {
           this.createEvents(eventsOrdered[i]);
         }
       }else{
-        console.log(calendarEvents);
         Alert.alert(
           // TODO décider action sur ok, TUER qqn au hasard?
           'Oups!',
@@ -87,6 +86,7 @@ export default class CalendarScreen extends Component {
 
   orderEvents(datas){
     return datas.sort(function(a,b){
+      // On se rend jusqu'à l'heure du début de l'évènement dans le iCal
       a = a[1][1][3];
       b = b[1][1][3];
 
