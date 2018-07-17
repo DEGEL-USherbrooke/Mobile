@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "degel-mobile-xde",
-    "description": "This project is really great.",
+    "name": "DEGEL UdeS",
+    "description": "Obtient horarius sur ton téléphone avec des notifications lors des changements d'horaire. Wow.",
     "slug": "degel-mobile-xde",
     "privacy": "public",
     "sdkVersion": "28.0.0",
@@ -21,7 +21,11 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false,
+      "bundleIdentifier" : "ca.usherbrooke.gel.s6igitlab"
+    },
+    "android" : {
+      "package" : "ca.usherbrooke.gel.s6igitlab"
     }
   }
 }
