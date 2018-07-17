@@ -53,26 +53,27 @@ export default class CalendarScreen extends Component {
   }
 
   async getCalendarEvents(){
-    await DegelClient.getCalendarEvents().then((calendarEvents) => {
-      if(calendarEvents.error === undefined){
-        var events = calendarEvents[2];
-        events = events.slice(1);
-        eventsOrdered = this.orderEvents(events);
-        for(var i = 0, len = eventsOrdered.length; i< len; i++){
-          this.createEvents(eventsOrdered[i]);
-        }
-      }else{
-        Alert.alert(
-          // TODO décider action sur ok, TUER qqn au hasard?
-          'Oups!',
-          I18n.t('CalendarScreen.errorMessage'),
-          [
-            {text: 'OK', onPress: () => console.log('OK Pressed')},
-          ],
-          { cancelable: false }
-        )
-      }
-    });
+    calendarEvents = await DegelClient.getCalendarEvents();
+    
+    if (calendarEvents[0] === undefined) {
+      Alert.alert(
+        'Oups!',
+        I18n.t('CalendarScreen.errorMessage'),
+        [
+          {text: 'OK', onPress: () => console.log('OK Pressed')},
+        ],
+        { cancelable: false }
+      )
+      return;
+    }
+
+    var events = calendarEvents[2];
+    events = events.slice(1);
+    eventsOrdered = this.orderEvents(events);
+    for(var i = 0, len = eventsOrdered.length; i< len; i++){
+      this.createEvents(eventsOrdered[i]);
+    }
+    
   }
 
   constructor(props) {

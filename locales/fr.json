@@ -1,7 +1,7 @@
 {
   "CalendarScreen": {
     "title": "Calendrier",
-    "errorMessage" : "Un problème est survenu, veuillez réessayer plus tard."
+    "errorMessage" : "Nous sommes dans l'impossibilité de récupérer votre horaire, veuillez réessayer plus tard."
   },
   "SettingsScreen": {
     "title": "Paramètres",
