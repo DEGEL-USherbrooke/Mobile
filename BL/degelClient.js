@@ -91,7 +91,10 @@ class DegelClient {
         body: body
       });
 
-      return response.json();
+      responseText = await response.text();
+      responseJson = JSON.parse(responseText);
+
+      return responseJson;
 
     } catch (error) {
       return {};
