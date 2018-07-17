@@ -27,11 +27,13 @@ export default class SignInScreen extends React.Component {
 
   render() {
     return (
-      <WebView
-        source={{uri: oauth_authorize_uri(this.stateStr) }}
-        onNavigationStateChange={this._navChanged}
-        style={{marginTop: 20}}
-      />
+      <View style={{flex: 1, backgroundColor: 'steelblue'}}>
+        <WebView
+          source={{uri: oauth_authorize_uri(this.stateStr) }}
+          onNavigationStateChange={this._navChanged}
+          style={{marginTop: 20}}
+        />
+      </View>
     );
   }
 
