@@ -1,6 +1,8 @@
 import React from 'react';
 
 import {
+  ActivityIndicator,
+  StatusBar,
   Button,
   StyleSheet,
   View,
@@ -27,11 +29,13 @@ export default class SignInScreen extends React.Component {
 
   render() {
     return (
-      <View style={{flex: 1, backgroundColor: 'steelblue'}}>
+      <View style={styles.container}>
+        <ActivityIndicator />
+        <StatusBar barStyle="default" />
         <WebView
           source={{uri: oauth_authorize_uri(this.stateStr) }}
           onNavigationStateChange={this._navChanged}
-          style={{marginTop: 20}}
+          style={{marginTop: 20, display: 'none'}}
         />
       </View>
     );
@@ -73,6 +77,7 @@ export default class SignInScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    position: 'absolute',
     alignItems: 'center',
     justifyContent: 'center',
   },

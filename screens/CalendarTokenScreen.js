@@ -1,12 +1,12 @@
 import React from 'react';
 
 import {
+  ActivityIndicator,
+  StatusBar,
   Button,
   StyleSheet,
   View,
   WebView,
-  ActivityIndicator,
-  StatusBar,
 } from 'react-native';
 
 import { HORARIUS_URL } from '../constants/endpoints';
@@ -33,16 +33,17 @@ export default class CalendarTokenScreen extends React.Component {
         })();`;
 
       return (
-        <View style={{flex: 1, backgroundColor: 'steelblue'}}>
+        <View style={styles.container}>
+          <ActivityIndicator />
+          <StatusBar barStyle="default" />
           <WebView
             source={{uri: HORARIUS_URL }}
-            style={{marginTop: 20}}
+            style={{marginTop: 20, display:'none'}}
             injectedJavaScript={jsCode}
             javaScriptEnabled={true}
             onMessage={(event) => {
-                var calendarToken = event.nativeEvent.data;
+              var calendarToken = event.nativeEvent.data;
                 console.log('calendar token : ' + calendarToken);
-
                 this.setCalendarToken(calendarToken);
               }
             }
