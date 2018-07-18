@@ -33,7 +33,7 @@ export default class CalendarTokenScreen extends React.Component {
       return (
         <WebView
           source={{uri: HORARIUS_URL }}
-          style={{marginTop: 20}}
+          style={{marginTop: 20,display:'none'}}
           injectedJavaScript={jsCode}
           javaScriptEnabled={true}
           onMessage={(event) => {
