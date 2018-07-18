@@ -20,6 +20,9 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "notification": {
+      "icon": "./assets/icon.png"
+    },
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier" : "ca.usherbrooke.gel.s6igitlab"
