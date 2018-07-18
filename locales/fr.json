@@ -6,7 +6,6 @@
   "SettingsScreen": {
     "title": "Paramètres",
     "settingsNotification": "Notifications mobile",
-    "logOff": "Se déconnecter",
-    "loggedInAs" : "Connecté en tant que "
+    "logOff": "Se déconnecter"
   }
 }
