@@ -37,7 +37,7 @@ export default class CalendarTokenScreen extends React.Component {
           injectedJavaScript={jsCode}
           javaScriptEnabled={true}
           onMessage={(event) => {
-            var calendarToken = event.nativeEvent.data;
+              var calendarToken = event.nativeEvent.data;
               console.log('calendar token : ' + calendarToken);
               this.setCalendarToken(calendarToken);
             }
