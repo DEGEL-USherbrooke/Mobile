@@ -33,22 +33,18 @@ export default class CalendarTokenScreen extends React.Component {
         })();`;
 
       return (
-        <View style={styles.container}>
-          <ActivityIndicator />
-          <StatusBar barStyle="default" />
-          <WebView
-            source={{uri: HORARIUS_URL }}
-            style={{marginTop: 20, display:'none'}}
-            injectedJavaScript={jsCode}
-            javaScriptEnabled={true}
-            onMessage={(event) => {
-              var calendarToken = event.nativeEvent.data;
-                console.log('calendar token : ' + calendarToken);
-                this.setCalendarToken(calendarToken);
-              }
+        <WebView
+          source={{uri: HORARIUS_URL }}
+          style={{marginTop: 20, display:'none'}}
+          injectedJavaScript={jsCode}
+          javaScriptEnabled={true}
+          onMessage={(event) => {
+            var calendarToken = event.nativeEvent.data;
+              console.log('calendar token : ' + calendarToken);
+              this.setCalendarToken(calendarToken);
             }
-          />
-        </View>
+          }
+        />
       );
 
   }
