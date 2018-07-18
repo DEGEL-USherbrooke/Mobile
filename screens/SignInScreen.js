@@ -71,7 +71,6 @@ export default class SignInScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position: 'absolute',
     alignItems: 'center',
     justifyContent: 'center',
   },
