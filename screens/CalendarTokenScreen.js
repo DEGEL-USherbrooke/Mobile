@@ -12,8 +12,15 @@ import { Session } from '../BL/session';
 
 export default class CalendarTokenScreen extends React.Component {
 
+  navigated = false;
+
   constructor() {
     super();
+    setTimeout(() => {
+      if (this.navigated == false) {
+        this.props.navigation.navigate('AuthLoading');
+      }
+    }, 4000);
   }
 
   render() {
@@ -49,6 +56,7 @@ export default class CalendarTokenScreen extends React.Component {
 
   setCalendarToken(calendarToken) {
     Session._horariusToken = calendarToken;
+    this.navigated = true;
     this.props.navigation.navigate('AuthLoading');
   }
 
