@@ -21,7 +21,7 @@ export default class SettingsScreen extends React.Component {
     this.setState({
       appIsReady: true, // fix I18n https://github.com/xcarpentier/ex-react-native-i18n/issues/7
       switchNotificationValue: this.settingsState.notification
-    }); 
+    });
   }
 
   constructor() {
@@ -52,7 +52,6 @@ export default class SettingsScreen extends React.Component {
         hasNavArrow={false}
         />
         <SettingsList.Item
-          //icon={<Image style={styles.imageStyle} source={require('./images/wifi.png')}/>}
           title={I18n.t('SettingsScreen.logOff')}
           titleStyle={{color:'red', textAlign: 'center'}}
           titleInfoStyle={styles.titleInfoStyle}
@@ -64,7 +63,7 @@ export default class SettingsScreen extends React.Component {
           }
         />
         <SettingsList.Item
-          title={Session._cip + ' - ' + Session._id}
+          title={I18n.t('SettingsScreen.loggedInAs') + Session._cip.toUpperCase()}
           titleStyle={{color:'grey', textAlign: 'center', fontSize: 12}}
           hasNavArrow={false}
         />
