@@ -74,7 +74,7 @@ export default class SettingsScreen extends React.Component {
           hasNavArrow={false}
           onPress={ async () => {
               await Session.logOut();
-              this.props.navigation.navigate('AuthLoading');
+              this.props.navigation.navigate('LogOut');
             }
           }
         />
