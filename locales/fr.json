@@ -10,5 +10,8 @@
     "TokenInstructionDescription": "Allez sur le site web de horarius. Cliquez sur le petit logo d'agenda en haut à droite de la page. Regénérez un lien iCal. Ensuite, dans cette application, déconnectez-vous et connectez-vous.",
     "logOff": "Se déconnecter",
     "loggedInAs" : "Connecté en tant que "
+  },
+  "SignInScreen": {
+    "signInButton": "Se connecter"
   }
 }
