@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Alert } from 'react-native';
 import SettingsList from 'react-native-settings-list';
 import { I18n } from '../locales/i18n';
 import { Session } from '../BL/session';
@@ -42,7 +42,6 @@ export default class SettingsScreen extends React.Component {
         <SettingsList borderColor='#c8c7cc' defaultItemSize={50}>
         <SettingsList.Header headerStyle={{marginTop:0}}/>
         <SettingsList.Item
-        //icon={<Image style={styles.imageStyle} source={require('./images/wifi.png')}/>}
         title={I18n.t('SettingsScreen.settingsNotification')}
         titleInfo=''
         titleInfoStyle={styles.titleInfoStyle}
@@ -50,6 +49,23 @@ export default class SettingsScreen extends React.Component {
         switchOnValueChange={this.onNotificationValueChange}
         hasSwitch={true}
         hasNavArrow={false}
+        />
+        <SettingsList.Item
+        title={I18n.t('SettingsScreen.TokenInstructionTitle')}
+        titleInfoStyle={styles.titleInfoStyle}
+        hasNavArrow={true}
+        onPress={
+          () => {
+             Alert.alert(
+              I18n.t('SettingsScreen.TokenInstructionTitle'),
+              I18n.t('SettingsScreen.TokenInstructionDescription'),
+              [
+                {text: 'OK', onPress: () => console.log('OK Pressed')},
+              ],
+              { cancelable: false }
+            )
+          }
+        }
         />
         <SettingsList.Item
           title={I18n.t('SettingsScreen.logOff')}

@@ -1,11 +1,13 @@
 {
   "CalendarScreen": {
     "title": "Calendrier",
-    "errorMessage" : "Nous sommes dans l'impossibilité de récupérer votre horaire, veuillez réessayer plus tard."
+    "errorMessage" : "Nous sommes dans l'impossibilité de récupérer votre horaire. Vous pouvez essayer les instructions pour régler le bug du calendrier dans la page paramètres de cette application."
   },
   "SettingsScreen": {
     "title": "Paramètres",
     "settingsNotification": "Notifications mobile",
+    "TokenInstructionTitle": "Régler le bug du calendrier",
+    "TokenInstructionDescription": "Allez sur le site web de horarius. Cliquez sur le petit logo d'agenda en haut à droite de la page. Regénérez un lien iCal. Ensuite, dans cette application, déconnectez-vous et connectez-vous.",
     "logOff": "Se déconnecter",
     "loggedInAs" : "Connecté en tant que "
   }
