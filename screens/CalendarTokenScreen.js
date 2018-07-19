@@ -18,6 +18,7 @@ export default class CalendarTokenScreen extends React.Component {
     super();
     setTimeout(() => {
       if (this.navigated == false) {
+        console.log("CalendarTokenScreen : This is too long. Redirecting to authentification page.")
         this.props.navigation.navigate('AuthLoading');
       }
     }, 4000);
