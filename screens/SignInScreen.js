@@ -9,6 +9,7 @@ import {
 
 import { oauth_authorize_uri, CALLBACK_URI } from '../constants/endpoints';
 import { DegelClient } from '../BL/degelClient';
+import { I18n } from '../locales/i18n';
 
 export default class SignInScreen extends React.Component {
   static navigationOptions = {
@@ -23,16 +24,37 @@ export default class SignInScreen extends React.Component {
 
     //Compteur de changements d'url
     this.counter = 0;
+    
+    this.state = {
+      displayPanel: true
+    }
+    this._signInClicked = this._signInClicked.bind(this);
   }
 
   render() {
-    return (
-      <WebView
-        source={{uri: oauth_authorize_uri(this.stateStr) }}
-        onNavigationStateChange={this._navChanged}
-        style={{marginTop: 20}}
-      />
-    );
+    
+      if (this.state.displayPanel) {
+        return(
+          <View style={styles.container}>
+            <Button title={I18n.t("SignInScreen.signInButton")} onPress={this._signInClicked} />
+          </View>
+        );
+      }
+      else {
+        return(
+          <WebView
+            source={{uri: oauth_authorize_uri(this.stateStr) }}
+            onNavigationStateChange={this._navChanged}
+            style={{marginTop: 20}}
+          />
+        );
+      }
+  }
+
+  _signInClicked() {
+    this.setState({
+      displayPanel: false
+    })
   }
 
   //Appellée à chaque changement de page dans la webview

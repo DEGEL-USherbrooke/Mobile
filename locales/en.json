@@ -10,5 +10,8 @@
     "TokenInstructionDescription": "Go to Horarius website. In the upper right corner, click the little agenda icon and regenerate an iCal link. Then sign out and sign in again in this app.",
     "logOff": "Sign out",
     "loggedInAs" : "Logged in as "
+  },
+  "SignInScreen": {
+    "signInButton": "Sign in"
   }
 }
