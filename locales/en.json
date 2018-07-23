@@ -1,17 +1,16 @@
 {
   "CalendarScreen": {
     "title": "Calendar",
-    "errorMessage" : "We were unable to fetch your calendar.\nYou can try the fix calendar instructions in the setting page of this app."
+    "errorMessage" : "We were unable to fetch your calendar.\n Please try again later."
   },
   "SettingsScreen": {
     "title": "Settings",
     "settingsNotification": "Mobile notifications",
-    "TokenInstructionTitle": "Fix calendar instructions",
-    "TokenInstructionDescription": "Go to Horarius website. In the upper right corner, click the little agenda icon and regenerate an iCal link. Then sign out and sign in again in this app.",
     "logOff": "Sign out",
     "loggedInAs" : "Logged in as "
   },
   "SignInScreen": {
-    "signInButton": "Sign in"
+    "signInButton": "Sign in",
+    "note" : "Warning ! This app is only for people with access to Horarius."
   }
 }
