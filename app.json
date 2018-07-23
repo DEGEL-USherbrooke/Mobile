@@ -20,7 +20,7 @@
       "**/*"
     ],
     "notification": {
-      "icon": "./assets/icon_notif_ios.png"
+      "icon": "./assets/icon.png"
     },
     "ios": {
       "supportsTablet": false,
