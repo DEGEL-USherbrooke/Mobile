@@ -6,11 +6,10 @@
     "privacy": "public",
     "sdkVersion": "28.0.0",
     "platforms": ["ios", "android"],
-    "version": "1.0.0",
+    "version": "1.2.0",
     "orientation": "portrait",
-    "icon": "./assets/icon_ios.png",
+    "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -21,13 +20,14 @@
       "**/*"
     ],
     "notification": {
-      "icon": "./assets/icon_notif_ios.png"
+      "icon": "./assets/icon.png"
     },
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier" : "ca.usherbrooke.gel.s6igitlab"
     },
     "android" : {
+      "versionCode" : 3,
       "package" : "ca.usherbrooke.gel.s6igitlab"
     }
   }

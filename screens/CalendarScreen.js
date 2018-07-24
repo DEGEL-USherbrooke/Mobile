@@ -54,7 +54,7 @@ export default class CalendarScreen extends Component {
 
   async getCalendarEvents(){
     calendarEvents = await DegelClient.getCalendarEvents();
-    
+
     if (calendarEvents[0] === undefined) {
       Alert.alert(
         'Oups!',
@@ -73,7 +73,7 @@ export default class CalendarScreen extends Component {
     for(var i = 0, len = eventsOrdered.length; i< len; i++){
       this.createEvents(eventsOrdered[i]);
     }
-    
+
   }
 
   constructor(props) {

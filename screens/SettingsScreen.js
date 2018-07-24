@@ -51,23 +51,6 @@ export default class SettingsScreen extends React.Component {
         hasNavArrow={false}
         />
         <SettingsList.Item
-        title={I18n.t('SettingsScreen.TokenInstructionTitle')}
-        titleInfoStyle={styles.titleInfoStyle}
-        hasNavArrow={true}
-        onPress={
-          () => {
-             Alert.alert(
-              I18n.t('SettingsScreen.TokenInstructionTitle'),
-              I18n.t('SettingsScreen.TokenInstructionDescription'),
-              [
-                {text: 'OK', onPress: () => console.log('OK Pressed')},
-              ],
-              { cancelable: false }
-            )
-          }
-        }
-        />
-        <SettingsList.Item
           title={I18n.t('SettingsScreen.logOff')}
           titleStyle={{color:'red', textAlign: 'center'}}
           titleInfoStyle={styles.titleInfoStyle}
