@@ -1,7 +1,8 @@
 {
   "CalendarScreen": {
     "title": "Calendar",
-    "errorMessage" : "We were unable to fetch your calendar.\n Please try again later."
+    "errorMessage" : "We were unable to fetch your calendar.\n Please try again later.",
+    "today" : "Today"
   },
   "SettingsScreen": {
     "title": "Settings",

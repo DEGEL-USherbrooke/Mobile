@@ -36,6 +36,7 @@ SettingsStack.navigationOptions = {
     <TabBarIcon
       focused={focused}
       name={Platform.OS === 'ios' ? `ios-settings${focused ? '' : '-outline'}` : 'md-settings'}
+      activeTintColor="red"
     />
   ),
   tabBarOptions: {
