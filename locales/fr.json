@@ -2,16 +2,23 @@
   "CalendarScreen": {
     "title": "Calendrier",
     "errorMessage" : "Nous sommes dans l'impossibilité de récupérer votre horaire.\n Veuillez réessayer plus tard.",
-    "today" : "Aujourd'hui"
+    "today" : "Aujourd'hui",
+    "accessibilityToday": "Bouton pour aller à la date d'Aujourd'hui"
   },
   "SettingsScreen": {
     "title": "Paramètres",
     "settingsNotification": "Notifications mobile",
     "logOff": "Se déconnecter",
-    "loggedInAs" : "Connecté en tant que "
+    "loggedInAs" : "Connecté en tant que ",
+    "accessibilityLogOff": "Bouton pour se déconnecter"
   },
   "SignInScreen": {
     "signInButton": "Se connecter",
-    "note" : "Attention ! Cette application ne s'adresse qu'aux personnes ayant accès à Horarius."
+    "note" : "Attention ! Cette application ne s'adresse qu'aux personnes ayant accès à Horarius.",
+    "accessibilityLogIn": "Se connecter"
+  },
+  "tabBar": {
+    "accessibilityCalendarScreen": "Bouton vers l'écran du calendrier",
+    "accessibilitySettingsScreen": "Bouton vers l'écran des paramètres",
   }
 }

@@ -51,6 +51,9 @@ export default class SettingsScreen extends React.Component {
         hasNavArrow={false}
         />
         <SettingsList.Item
+          // TODO appelr le garage, non fonctionnel 
+          //accessible={true}
+          //accessibilityLabel={I18n.t('SettingsScreen.accessibilityLogOff')}
           title={I18n.t('SettingsScreen.logOff')}
           titleStyle={{color:'red', textAlign: 'center'}}
           titleInfoStyle={styles.titleInfoStyle}

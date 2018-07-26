@@ -43,6 +43,8 @@ export default class CalendarScreen extends Component {
     this.props.navigation.setParams({title: I18n.t('CalendarScreen.title'),
                                      headerRight:
                                         <TouchableOpacity
+                                          accessible={true}
+                                          accessibilityLabel={I18n.t('CalendarScreen.accessibilityToday')}
                                           onPress={() => this.agenda.chooseDay(new Date())}>
                                             <Text style={styles.today}>
                                               {I18n.t('CalendarScreen.today')}

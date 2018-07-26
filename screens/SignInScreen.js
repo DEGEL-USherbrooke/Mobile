@@ -43,12 +43,17 @@ export default class SignInScreen extends React.Component {
 
       if (this.state.displayPanel) {
         return(
-          <View style={styles.container}>
-          <Image
-            source={require('../assets/banner_homepage.png')}
-            style={styles.welcomeImage}
-          />
-            <Button title={I18n.t("SignInScreen.signInButton")} color="#2F9B63" onPress={this._signInClicked} />
+          <View style={styles.container} accessible={true} accessibilityLabel={"Page d'Accueil"}>
+            <Image
+              source={require('../assets/banner_homepage.png')}
+              style={styles.welcomeImage}
+            />
+            <Button
+              title={I18n.t("SignInScreen.signInButton")}
+              color="#2F9B63"
+              onPress={this._signInClicked}
+              accessibilityLabel={I18n.t('SignInScreen.accessibilitySignIn')}
+            />
             <Image
               source={require('../assets/udes.png')}
               style={styles.logoUdes}
