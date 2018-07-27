@@ -15,7 +15,9 @@
     "react": "16.3.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-28.0.0.tar.gz",
     "react-native-calendars": "^1.19.3",
+    "react-native-iphone-x-helper": "^1.0.3",
     "react-native-settings-list": "^1.8.0",
+    "react-native-vector-icons": "^4.6.0",
     "react-navigation": "^2.5.3"
   },
   "devDependencies": {

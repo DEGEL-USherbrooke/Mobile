@@ -1,4 +1,8 @@
 import React from 'react';
+import Icon from 'react-native-vector-icons/Entypo';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Session } from '../BL/session';
+import { ifIphoneX, getStatusBarHeight} from 'react-native-iphone-x-helper'
 
 import {
   Button,
@@ -8,6 +12,7 @@ import {
   Platform,
   WebView,
   Image,
+  BackHandler
 } from 'react-native';
 
 import { oauth_authorize_uri, CALLBACK_URI } from '../constants/endpoints';
@@ -22,6 +27,14 @@ export default class SignInScreen extends React.Component {
   async componentWillMount() {
     await I18n.initAsync();
     this.setState({appIsReady: true }); // fix I18n https://github.com/xcarpentier/ex-react-native-i18n/issues/7
+  }
+
+  componentDidMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
   }
 
   constructor(props) {
@@ -66,11 +79,32 @@ export default class SignInScreen extends React.Component {
       }
       else {
         return(
-          <WebView
-            source={{uri: oauth_authorize_uri(this.stateStr) }}
-            onNavigationStateChange={this._navChanged}
-            style={{marginTop: 20}}
-          />
+          <View style={{flex: 1}}>
+            <View style={styles.toolBarWebView}>
+            <Ionicons
+              style={{marginLeft:'8%', ...Platform.select({android: {marginTop: 2.5}})}}
+              name={Platform.OS === 'ios' ? `ios-arrow-back` : 'md-arrow-back'}
+              size={Platform.OS === 'ios' ? 35 : 30}
+              color="#000000"
+              onPress={this.handleBackPress}
+            />
+            <Icon
+              style={{marginRight:'8%'}}
+              name="cross"
+              size={35}
+              color="#000000"
+              onPress={ async () => {
+                  await Session.logOut();
+                  this.props.navigation.navigate('LogOut')}
+                }
+            />
+            </View>
+            <WebView
+              ref={r => this.webview = r}
+              source={{uri: oauth_authorize_uri(this.stateStr) }}
+              onNavigationStateChange={this._navChanged}
+            />
+          </View>
         );
       }
   }
@@ -85,6 +119,10 @@ export default class SignInScreen extends React.Component {
   _navChanged = (navState) => {
     //Vérifie l'URL d'arrivée
     if(navState.url.includes(CALLBACK_URI + '?code=')){
+
+      this.setState({
+        canGoBack: navState.canGoBack
+      });
 
       this.counter++;
 
@@ -112,11 +150,17 @@ export default class SignInScreen extends React.Component {
     this.props.navigation.navigate('TokenHorarius');
   }
 
+
+  handleBackPress = () => {
+    this.webview.goBack();
+    return true;
+  }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'white'
@@ -161,5 +205,24 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginRight: 20,
     marginLeft: 20
+  },
+  toolBarWebView: {
+    marginTop: getStatusBarHeight(),
+    ...ifIphoneX({paddingTop:30}),
+    ...Platform.select({
+      ios: {
+        shadowColor: 'black',
+        shadowOffset: { height: 3 },
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
+      },
+      android: {
+        elevation: 20,
+      },
+    }),
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#fbfbfb',
+    paddingVertical: 5
   },
 });
