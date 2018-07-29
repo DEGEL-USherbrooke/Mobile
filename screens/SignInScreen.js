@@ -2,7 +2,8 @@ import React from 'react';
 import Icon from 'react-native-vector-icons/Entypo';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Session } from '../BL/session';
-import { ifIphoneX, getStatusBarHeight} from 'react-native-iphone-x-helper'
+import { ifIphoneX, getStatusBarHeight} from 'react-native-iphone-x-helper';
+import { NetInfo } from 'react-native';
 
 import {
   Button,
@@ -12,7 +13,8 @@ import {
   Platform,
   WebView,
   Image,
-  BackHandler
+  BackHandler,
+  Alert
 } from 'react-native';
 
 import { oauth_authorize_uri, CALLBACK_URI } from '../constants/endpoints';
@@ -110,8 +112,21 @@ export default class SignInScreen extends React.Component {
   }
 
   _signInClicked() {
-    this.setState({
-      displayPanel: false
+    NetInfo.isConnected.fetch().then(isConnected => {
+      if(isConnected){
+        this.setState({
+          displayPanel: false
+        })
+      } else {
+        Alert.alert(
+          'Oups',
+          I18n.t('SignInScreen.noInternet'),
+          [
+            {text: 'OK', onPress: () => console.log('OK Pressed')},
+          ],
+          { cancelable: false }
+        )
+      }
     })
   }
 

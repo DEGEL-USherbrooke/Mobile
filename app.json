@@ -20,7 +20,8 @@
       "**/*"
     ],
     "notification": {
-      "icon": "./assets/icon.png"
+      "icon": "./assets/icon_android.png",
+      "color": "#000000"
     },
     "ios": {
       "supportsTablet": false,
