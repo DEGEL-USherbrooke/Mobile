@@ -33,10 +33,16 @@ export default class SignInScreen extends React.Component {
 
   componentDidMount() {
     BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
+
+    NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange);
+    NetInfo.isConnected.fetch().done(
+      (isConnected) => { this.setState({ connectionStatus: isConnected }); }
+    );
   }
 
   componentWillUnmount() {
     BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
+    NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectionChange);
   }
 
   constructor(props) {
@@ -49,7 +55,8 @@ export default class SignInScreen extends React.Component {
     this.counter = 0;
 
     this.state = {
-      displayPanel: true
+      displayPanel: true,
+      connectionStatus: false
     }
     this._signInClicked = this._signInClicked.bind(this);
   }
@@ -112,22 +119,20 @@ export default class SignInScreen extends React.Component {
   }
 
   _signInClicked() {
-    NetInfo.isConnected.fetch().then(isConnected => {
-      if(isConnected){
-        this.setState({
-          displayPanel: false
-        })
-      } else {
-        Alert.alert(
-          'Oups',
-          I18n.t('SignInScreen.noInternet'),
-          [
-            {text: 'OK', onPress: () => console.log('OK Pressed')},
-          ],
-          { cancelable: false }
-        )
-      }
-    })
+    if(this.state.connectionStatus){
+      this.setState({
+        displayPanel: false
+      })
+    } else {
+      Alert.alert(
+        'Oups',
+        I18n.t('SignInScreen.noInternet'),
+        [
+          {text: 'OK', onPress: () => console.log('OK Pressed')},
+        ],
+        { cancelable: false }
+      )
+    }
   }
 
   //Appellée à chaque changement de page dans la webview
@@ -169,6 +174,10 @@ export default class SignInScreen extends React.Component {
   handleBackPress = () => {
     this.webview.goBack();
     return true;
+  }
+
+  handleConnectionChange = (isConnected) => {
+          this.setState({ connectionStatus: isConnected });
   }
 }
 

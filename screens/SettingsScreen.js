@@ -25,13 +25,25 @@ export default class SettingsScreen extends React.Component {
     });
   }
 
+  componentDidMount() {
+    NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectionChange);
+    NetInfo.isConnected.fetch().done(
+      (isConnected) => { this.setState({ connectionStatus: isConnected }); }
+    );
+  }
+
+  componentWillUnmount() {
+    NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectionChange);
+  }
+
   constructor() {
     super();
     this.onNotificationValueChange = this.onNotificationValueChange.bind(this);
     this.state = {
       switchCalendarValue: false,
       switchNotificationValue: false,
-      appIsReady: false
+      appIsReady: false,
+      connectionStatus: false
     };
   }
 
@@ -74,20 +86,22 @@ export default class SettingsScreen extends React.Component {
   onNotificationValueChange(value){
     DegelClient.setSettingsStatus(value);
     this.setState({switchNotificationValue: value});
-    NetInfo.isConnected.fetch().then(isConnected => {
-      if(!isConnected){
-        DegelClient.setSettingsStatus(!value);
-        this.setState({switchNotificationValue: !value});
-        Alert.alert(
-          'Oups',
-          I18n.t('SettingsScreen.noInternet'),
-          [
-            {text: 'OK', onPress: () => console.log('OK Pressed')},
-          ],
-          { cancelable: false }
-        )
-      }
-    })
+    if(!this.state.connectionStatus){
+      DegelClient.setSettingsStatus(!value);
+      this.setState({switchNotificationValue: !value});
+      Alert.alert(
+        'Oups',
+        I18n.t('SettingsScreen.noInternet'),
+        [
+          {text: 'OK', onPress: () => console.log('OK Pressed')},
+        ],
+        { cancelable: false }
+      )
+    }
+  }
+
+  handleConnectionChange = (isConnected) => {
+          this.setState({ connectionStatus: isConnected });
   }
 }
 
