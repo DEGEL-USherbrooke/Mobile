@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
   today: {
     color: '#2F9B63',
     marginTop: 6,
-    marginRight: 15,
+    marginRight: 20,
     fontSize: 12,
     fontWeight: 'bold'
   }

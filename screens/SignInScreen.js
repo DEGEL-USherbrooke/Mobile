@@ -58,7 +58,7 @@ export default class SignInScreen extends React.Component {
 
       if (this.state.displayPanel) {
         return(
-          <View style={styles.container} accessible={true} accessibilityLabel={"Page d'Accueil"}>
+          <View style={styles.container} accessible={true}>
             <Image
               source={require('../assets/banner_homepage.png')}
               style={styles.welcomeImage}
