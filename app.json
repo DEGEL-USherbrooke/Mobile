@@ -6,7 +6,7 @@
     "privacy": "public",
     "sdkVersion": "28.0.0",
     "platforms": ["ios", "android"],
-    "version": "1.2.0",
+    "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -20,14 +20,15 @@
       "**/*"
     ],
     "notification": {
-      "icon": "./assets/icon.png"
+      "icon": "./assets/icon_android.png",
+      "color": "#000000"
     },
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier" : "ca.usherbrooke.gel.s6igitlab"
     },
     "android" : {
-      "versionCode" : 3,
+      "versionCode" : 4,
       "package" : "ca.usherbrooke.gel.s6igitlab"
     }
   }

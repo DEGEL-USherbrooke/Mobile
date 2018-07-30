@@ -1,16 +1,21 @@
 {
   "CalendarScreen": {
     "title": "Calendar",
-    "errorMessage" : "We were unable to fetch your calendar.\n Please try again later."
+    "errorMessage" : "We were unable to fetch your calendar.\nPlease try again later.",
+    "today" : "Today",
+    "accessibilityToday": "Button to go to today's date"
   },
   "SettingsScreen": {
     "title": "Settings",
     "settingsNotification": "Mobile notifications",
     "logOff": "Sign out",
-    "loggedInAs" : "Logged in as "
+    "loggedInAs" : "Calendar of ",
+    "noInternet": "No Internet connection.\nNo change has been done"
   },
   "SignInScreen": {
     "signInButton": "Sign in",
-    "note" : "Warning ! This app is only for people with access to Horarius."
+    "note" : "Warning ! This app is only for people with access to Horarius.",
+    "accessibilityLogIn": "Sign in",
+    "noInternet": "No Internet connection."
   }
 }

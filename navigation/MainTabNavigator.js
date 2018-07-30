@@ -12,6 +12,7 @@ const CalendarStack = createStackNavigator({
 });
 
 CalendarStack.navigationOptions = {
+    tabBarLabel: "Bouton vers l'écran de l'agenda",
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
@@ -32,6 +33,7 @@ const SettingsStack = createStackNavigator({
 });
 
 SettingsStack.navigationOptions = {
+  tabBarLabel: "Bouton vers l'écran des paramètres",
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}

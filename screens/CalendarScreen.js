@@ -3,7 +3,9 @@ import {
   Text,
   View,
   StyleSheet,
-  Alert
+  Alert,
+  TouchableOpacity,
+  Image
 } from 'react-native';
 import {Agenda} from 'react-native-calendars';
 import Moment from 'moment';
@@ -38,7 +40,16 @@ export default class CalendarScreen extends Component {
 
   async componentWillMount() {
     await I18n.initAsync();
-    this.props.navigation.setParams({title: I18n.t('CalendarScreen.title') });
+    this.props.navigation.setParams({title: I18n.t('CalendarScreen.title'),
+                                     headerRight:
+                                        <TouchableOpacity
+                                          accessible={true}
+                                          accessibilityLabel={I18n.t('CalendarScreen.accessibilityToday')}
+                                          onPress={() => this.agenda.chooseDay(new Date())}>
+                                            <Text style={styles.today}>
+                                              {I18n.t('CalendarScreen.today')}
+                                            </Text>
+                                        </TouchableOpacity>});
 
     // change local of calendar
     splitLocalString = I18n.locale.split('-');
@@ -135,13 +146,23 @@ export default class CalendarScreen extends Component {
         renderItem={this.renderItem.bind(this)}
         renderEmptyDate={this.renderEmptyDate.bind(this)}
         rowHasChanged={this.rowHasChanged.bind(this)}
+        theme={{
+          agendaDayTextColor: 'black',
+          agendaDayNumColor: 'black',
+          agendaTodayColor: '#2F9B63',
+          agendaKnobColor: '#2F9B63',
+          dotColor: '#2F9B63',
+          selectedDayBackgroundColor : '#2F9B63',
+          todayTextColor : '#2F9B63'
+        }}
+        ref={(agenda) => { this.agenda = agenda; }}
       />
     );
   }
 
   loadItems(day) {
     setTimeout(() => {
-      for (let i = 0; i < 14; i++) {
+      for (let i = 0; i < 21; i++) {
         const time = day.timestamp + i * 24 * 60 * 60 * 1000;
         const strTime = this.timeToString(time);
         if (!this.state.items[strTime]) {
@@ -189,7 +210,7 @@ export default class CalendarScreen extends Component {
   }
 
   rowHasChanged(r1, r2) {
-    return r1.name !== r2.name;
+    return r1.title !== r2.title;
   }
 
   timeToString(time) {
@@ -233,9 +254,6 @@ const styles = StyleSheet.create({
   itemLocation:{
     fontSize:14
   },
-  itemTeacherName:{
-    fontSize:12
-  },
   itemDescription:{
     fontSize:12
   },
@@ -244,5 +262,12 @@ const styles = StyleSheet.create({
     height: 15,
     flex:1,
     paddingTop: 30
+  },
+  today: {
+    color: '#2F9B63',
+    marginTop: 6,
+    marginRight: 20,
+    fontSize: 12,
+    fontWeight: 'bold'
   }
 });
