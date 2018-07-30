@@ -56,7 +56,14 @@ export default class CalendarTokenScreen extends React.Component {
   }
 
   setCalendarToken(calendarToken) {
-    Session._horariusToken = calendarToken;
+    // patch for error 500 bodies
+    if (calendarToken.indexOf(' ') >= 0) {
+      // there is some white spaces
+      Session._horariusToken = undefined;
+     } else {
+      Session._horariusToken = calendarToken;
+    }
+
     this.navigated = true;
     this.props.navigation.navigate('AuthLoading');
   }
