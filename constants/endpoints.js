@@ -1,5 +1,5 @@
 // oauth construction
-const BASE_URL = 'https://s6iprojet02.gel.usherbrooke.ca';
+const BASE_URL = 'https://de.gel.usherbrooke.ca';
 const OAUTH_AUTHORIZE_URI = BASE_URL + '/oauth/authorize';
 const OAUTH_TOKEN_URI = BASE_URL + '/oauth/token';
 const CLIENT_ID = 'R9HZLN7GMLET8PB7JQWJ963N9A5ML7';
