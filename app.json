@@ -25,11 +25,12 @@
     },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier" : "ca.usherbrooke.gel.s6igitlab"
+      "bundleIdentifier" : "ca.usherbrooke.gel.de"
     },
     "android" : {
       "versionCode" : 4,
-      "package" : "ca.usherbrooke.gel.s6igitlab"
+      "package" : "ca.usherbrooke.gel.de",
+      "permissions" : []
     }
   }
 }
