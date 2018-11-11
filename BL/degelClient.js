@@ -110,6 +110,23 @@ class DegelClient {
     }
   }
 
+  static async getUserNews() {
+    if (Session._id == undefined) {
+      console.log('No user_id was set - please sign out');
+    }
+
+    newsList = await this.authorizedFetch(BASE_URL + "/api/user/" + Session._id + "/news", 'GET')
+
+    console.log(newsList)
+
+    if (newsList.error == undefined) {
+      return newsList;
+    }
+    else {
+      return [];
+    }
+  }
+
   static async getFeedList() {
     if (Session._id == undefined) {
       console.log('No user_id was set - please sign out');

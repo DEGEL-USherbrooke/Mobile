@@ -14,7 +14,10 @@
   },
   "NewsScreen": {
     "title": "Sherbrooke Newsfeed",
-    "FooterInformation": "Add or remove subscription topics in the settings page."
+    "FooterInformation": "Add or remove subscription topics in the settings page.",
+    "gettingReady": "The newsfeed is getting ready.",
+    "noNews": "Newsfeed empty",
+    "refreshButton": "Refresh Newsfeed"
   },
   "NewsTopic": {
     "title": "News Topics",

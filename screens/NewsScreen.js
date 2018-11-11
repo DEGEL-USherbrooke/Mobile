@@ -1,8 +1,10 @@
 import React from 'react';
-import { StyleSheet, Text, View, Alert, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Alert, ScrollView, ActivityIndicator, Button } from 'react-native';
 import { I18n } from '../locales/i18n';
 import { Session } from '../BL/session';
 import { DegelClient } from '../BL/degelClient';
+import NewsTopics from '../components/NewsTopics';
+const uuidv4 = require('uuid/v4');
 
 export default class NewsScreen extends React.Component {
 
@@ -11,13 +13,23 @@ export default class NewsScreen extends React.Component {
     return params;
   };
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      appIsReady: false,
+      newsList: []
+    }
+
+    this.onPress = this.onPress.bind(this);
+  }
+
   async componentWillMount() {
     await I18n.initAsync();
+
     this.props.navigation.setParams({title: I18n.t('NewsScreen.title') });
 
-    this.setState({
-      appIsReady: true, // fix I18n https://github.com/xcarpentier/ex-react-native-i18n/issues/7
-    });
+    this.refreshNewsFeed();
   }
 
   componentDidMount() {
@@ -26,37 +38,92 @@ export default class NewsScreen extends React.Component {
   componentWillUnmount() {
   }
 
-  constructor() {
-    super();
+  async refreshNewsFeed() {
+    newsList = await DegelClient.getUserNews();
+
+    console.log(newsList);
+
+    this.setState({
+      appIsReady: true, // fix I18n https://github.com/xcarpentier/ex-react-native-i18n/issues/7
+      newsList: newsList
+    });
+  }
+
+  async onPress() {
+    this.refreshNewsFeed();
   }
 
   render() {
-    const newsArray = [];
-    for (var i=0; i < 5; i++) {
-        newsArray.push(
-         <View style={styles.news} key={'news-' + i.toString()}>
-          <View style={styles.header}  key={'header-' + i.toString()}>
-            <Text style={styles.title}  key={'title-' + i.toString()}>Titre</Text>
-            <View style={styles.image}  key={'image-' + i.toString()}/>
-          </View>
-          <Text  key={'desc-' + i.toString()}>Description. Very long description, there is more to say because this is very long. Even longer than a long long long story.</Text>
+    if (this.state.appIsReady && this.state.newsList.length > 0) {
+      // we got some news to display
+      const newsArray = [];
+      for (const news of this.state.newsList) {
+          const keyPrefix = uuidv4().toString().substring(0, 7);
+          newsArray.push(
+           <View style={styles.news} key={keyPrefix + "-container"}>
+            <View style={styles.header}  key={keyPrefix + "-header"}>
+              <Text style={styles.title}  key={keyPrefix + "-title"}>{news.title}</Text>
+              <View style={styles.image}  key={keyPrefix + "-image"}/>
+            </View>
+            <Text  key={keyPrefix + "-desc"}>{news.description}</Text>
+           </View>
+          );
+      }
+      return (
+        <ScrollView style={{
+          flex: 1
+        }}>
+         {
+            newsArray
+         }
+         <View style={styles.infoView}>
+          <Text style={styles.infoText}>{I18n.t('NewsScreen.FooterInformation')}</Text>
          </View>
-        );
+       </ScrollView>
+      );
+    } else if (this.state.appIsReady) {
+      return(
+        <ScrollView style={{
+          flex: 1
+        }}>
+          <View style={noNewsStyle.container}>
+            <Text style={styles.title}>{I18n.t('NewsScreen.noNews')}</Text>
+            <NewsTopics/>
+            <Button
+              onPress={this.onPress}
+              title={I18n.t('NewsScreen.refreshButton')}
+              color="#2F9B63"
+              accessibilityLabel={I18n.t('NewsScreen.refreshButton')}
+            />
+          </View>
+        </ScrollView>
+      );
     }
-    return (
-      <ScrollView style={{
-        flex: 1
-      }}>
-       {
-          newsArray
-       }
-       <View style={styles.infoView}>
-        <Text style={styles.infoText}>{I18n.t('NewsScreen.FooterInformation')}</Text>
-       </View>
-     </ScrollView>
-    );
+    else {
+      return(
+        <View style={{marginTop: 20, padding: 20, justifyContent: 'center', alignItems: 'center'}}>
+          <ActivityIndicator size="large" color="#2F9B63" />
+          <Text style={{marginTop: 40}}>{I18n.t('NewsScreen.gettingReady')}</Text>
+        </View>
+      );
+    }
+    
   }
 }
+
+const noNewsStyle = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    marginTop: 20,
+    padding: 10
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center'
+  }
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -78,6 +145,8 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
+    paddingRight: 10,
+    flexShrink: 1,
     fontWeight: 'bold'
   },
   image: {

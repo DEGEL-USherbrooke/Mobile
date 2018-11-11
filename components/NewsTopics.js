@@ -109,11 +109,13 @@ class NewsTopics extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    flexDirection: 'column',
     backgroundColor: '#fff',
     paddingTop: 20,
     paddingBottom: 20,
     paddingLeft: 20,
-    paddingRight: 20
+    paddingRight: 20,
   },
   title: {
     fontSize: 20,
