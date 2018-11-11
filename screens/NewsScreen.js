@@ -13,7 +13,7 @@ export default class NewsScreen extends React.Component {
 
   async componentWillMount() {
     await I18n.initAsync();
-    this.props.navigation.setParams({title: I18n.t('SettingsScreen.title') });
+    this.props.navigation.setParams({title: I18n.t('NewsScreen.title') });
 
     this.setState({
       appIsReady: true, // fix I18n https://github.com/xcarpentier/ex-react-native-i18n/issues/7
@@ -50,6 +50,9 @@ export default class NewsScreen extends React.Component {
        {
           newsArray
        }
+       <View style={styles.infoView}>
+        <Text style={styles.infoText}>{I18n.t('NewsScreen.FooterInformation')}</Text>
+       </View>
      </ScrollView>
     );
   }
@@ -81,5 +84,13 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     backgroundColor: 'steelblue'
+  },
+  infoView: {
+    alignItems: 'center',
+    padding: 20
+  },
+  infoText: {
+    alignItems: 'center',
+    fontSize: 12
   }
 });

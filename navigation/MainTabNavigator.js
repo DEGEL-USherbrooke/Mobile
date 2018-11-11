@@ -38,11 +38,7 @@ NewsStack.navigationOptions = {
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-calendar${focused ? '' : '-outline'}`
-          : 'md-calendar'
-      }
+      name={Platform.OS === 'ios' ? `ios-paper${focused ? '' : '-outline'}` : 'md-paper'}
     />
   ),
   tabBarOptions: {

@@ -12,6 +12,10 @@
     "loggedInAs" : "Calendar of ",
     "noInternet": "No Internet connection.\nNo change has been done"
   },
+  "NewsScreen": {
+    "title": "Sherbrooke Newsfeed",
+    "FooterInformation": "Add or remove subscription topics in the settings page."
+  },
   "SignInScreen": {
     "signInButton": "Sign in",
     "note" : "Warning ! This app is only for people with access to Horarius.",
