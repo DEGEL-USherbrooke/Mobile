@@ -1,5 +1,15 @@
 import React from 'react';
-import { StyleSheet, Text, View, Alert, ScrollView, ActivityIndicator, Button, Image, TouchableOpacity } from 'react-native';
+import {  StyleSheet,
+          Text,
+          View,
+          Alert,
+          ScrollView,
+          ActivityIndicator,
+          Button,
+          Image,
+          TouchableOpacity,
+          WebView
+} from 'react-native';
 import { I18n } from '../locales/i18n';
 import { Session } from '../BL/session';
 import { DegelClient } from '../BL/degelClient';
@@ -18,11 +28,13 @@ export default class NewsScreen extends React.Component {
 
     this.state = {
       appIsReady: false,
-      newsList: []
+      newsList: [],
+      readLink: undefined
     }
 
     this.onPress = this.onPress.bind(this);
     this.readMore = this.readMore.bind(this);
+    this.goBack = this.goBack.bind(this);
   }
 
   async componentWillMount() {
@@ -56,9 +68,38 @@ export default class NewsScreen extends React.Component {
 
   async readMore(link) {
     console.log("read link " + link)
+    this.setState({
+      readLink: link
+    });
+  }
+
+  async goBack() {
+    this.setState({
+      readLink: undefined
+    })
   }
 
   render() {
+    console.log(this.state.readLink)
+    if (this.state.readLink !== undefined) {
+
+      // reading mode
+      return (
+        <View style={{flex: 1}}>
+          <Button
+            onPress={this.goBack}
+            title='Go back'
+            color="#2F9B63"
+            accessibilityLabel='Go back'
+          />
+          <WebView
+            source={{uri: this.state.link }}
+            style={{marginTop: 20, flex: 1}}
+          />
+        </View>
+      );
+    }
+
     if (this.state.appIsReady && this.state.newsList.length > 0) {
       // we got some news to display
       const newsArray = [];
