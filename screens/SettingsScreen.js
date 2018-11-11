@@ -5,6 +5,7 @@ import { I18n } from '../locales/i18n';
 import { Session } from '../BL/session';
 import { DegelClient } from '../BL/degelClient';
 import { NetInfo } from 'react-native';
+import NewsTopics from '../components/NewsTopics';
 
 export default class SettingsScreen extends React.Component {
 
@@ -78,6 +79,7 @@ export default class SettingsScreen extends React.Component {
             titleStyle={{color:'grey', textAlign: 'center', fontSize: 12}}
             hasNavArrow={false}
           />
+          <NewsTopics/>
         </SettingsList>
       </View>
     );

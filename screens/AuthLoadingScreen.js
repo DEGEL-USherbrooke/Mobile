@@ -21,6 +21,8 @@ export default class AuthLoadingScreen extends React.Component {
     isAuthorizedToLogIn = await Session.logIn();
 
     if (isAuthorizedToLogIn) {
+      console.log("User id: " + Session._id);
+      console.log("User cip: " + Session._cip);
       this.props.navigation.navigate('Main');
     }
     else {

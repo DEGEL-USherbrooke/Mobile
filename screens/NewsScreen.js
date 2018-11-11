@@ -90,7 +90,6 @@ const styles = StyleSheet.create({
     padding: 20
   },
   infoText: {
-    alignItems: 'center',
     fontSize: 12
   }
 });
