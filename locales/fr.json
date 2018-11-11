@@ -19,7 +19,9 @@
   "NewsTopic": {
     "title": "Sujets de Nouvelles",
     "subscribe": "S'abonner",
-    "unsubscribe": "Se désabonner"
+    "unsubscribe": "Se désabonner",
+    "waitingMessage": "Chargement des sujets...",
+    "unavailableMessage": "Pas de sujets disponible."
   },
   "SignInScreen": {
     "signInButton": "Se connecter",

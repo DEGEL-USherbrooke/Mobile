@@ -19,7 +19,9 @@
   "NewsTopic": {
     "title": "News Topics",
     "subscribe": "Subscribe",
-    "unsubscribe": "Unsubscribe"
+    "unsubscribe": "Unsubscribe",
+    "waitingMessage": "Loading topics...",
+    "unavailableMessage": "No topics available."
   },
   "SignInScreen": {
     "signInButton": "Sign in",

@@ -110,6 +110,39 @@ class DegelClient {
     }
   }
 
+  static async getFeedList() {
+    if (Session._id == undefined) {
+      console.log('No user_id was set - please sign out');
+    }
+
+    feedsList = await this.authorizedFetch(BASE_URL + "/api/feeds", 'GET')
+
+    return feedsList;
+  }
+
+  static async setFeedList(feedList) {
+    if (Session._id == undefined) {
+      console.log('No user_id was set - please sign out');
+    }
+
+    currentSettings = await this.getSettingsStatus();
+
+    settingsState = {
+      "feeds": feedList,
+      "notifications": {
+        "mobile": currentSettings.notification
+      }
+    }
+
+    response = await this.authorizedFetch(
+      BASE_URL + '/api/user/' + Session._id + '/settings',
+      'POST',
+      JSON.stringify(settingsState)
+    );
+
+    console.log(response);
+  }
+
   static async getSettingsStatus() {
     if (Session._id == undefined) {
       console.log('No user_id was set - please sign out');
@@ -118,11 +151,13 @@ class DegelClient {
     settingsStateResponse = await this.authorizedFetch(BASE_URL + '/api/user/' + Session._id + '/settings', 'GET');
 
     settingsState = {
-      notification: false
+      notification: false,
+      feeds: []
     }
 
     try {
       settingsState.notification = settingsStateResponse.notifications.mobile;
+      settingsState.feeds = settingsStateResponse.feeds;
     }
     catch(error) {
       console.log("something went wrong : ");
