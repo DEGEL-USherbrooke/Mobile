@@ -7,7 +7,7 @@ var fr_CA_data = require('./fr.json');
 I18n.fallbacks = true
 
 I18n.translations = {
-  en: en_US_data,
+  en: en_US_data, // replace by fr_CA_data to test french
   fr: fr_CA_data
 }
 

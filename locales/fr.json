@@ -16,6 +16,11 @@
     "title": "Nouvelles de Sherbrooke",
     "FooterInformation": "Ajoute ou enlève des abonnements à des sujets dans la page des paramètres."
   },
+  "NewsTopic": {
+    "title": "Sujets de Nouvelles",
+    "subscribe": "S'abonner",
+    "unsubscribe": "Se désabonner"
+  },
   "SignInScreen": {
     "signInButton": "Se connecter",
     "note" : "Attention ! Cette application ne s'adresse qu'aux personnes ayant accès à Horarius.",

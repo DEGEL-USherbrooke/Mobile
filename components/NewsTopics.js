@@ -1,27 +1,36 @@
 import React from 'react';
+import { I18n } from '../locales/i18n';
 import { StyleSheet, Text, View, Button } from 'react-native';
 
 class NewsTopics extends React.Component {
+  async componentWillMount() {
+    await I18n.initAsync();
+
+    this.setState({
+      appIsReady: true, // fix I18n https://github.com/xcarpentier/ex-react-native-i18n/issues/7
+    });
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>News Topics</Text>
+        <Text style={styles.title}>{I18n.t('NewsTopic.title')}</Text>
         <View style={styles.topic}>
-          <Text>Topic1</Text>
+          <Text>Topic 1</Text>
           <Button
             // onPress={onPressLearnMore}
-            title="Subscribe"
+            title={I18n.t('NewsTopic.subscribe')}
             color="#2F9B63"
-            accessibilityLabel="Susbscribe to this topic"
+            accessibilityLabel={I18n.t('NewsTopic.subscribe')}
           />
         </View>
         <View style={styles.topic}>
-          <Text>Topic1</Text>
+          <Text>Topic 2</Text>
           <Button
             // onPress={onPressLearnMore}
-            title="Unsubscribe"
+            title={I18n.t('NewsTopic.unsubscribe')}
             color="red"
-            accessibilityLabel="Susbscribe to this topic"
+            accessibilityLabel={I18n.t('NewsTopic.unsubscribe')}
           />
         </View>
       </View>

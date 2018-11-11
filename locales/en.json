@@ -16,6 +16,11 @@
     "title": "Sherbrooke Newsfeed",
     "FooterInformation": "Add or remove subscription topics in the settings page."
   },
+  "NewsTopic": {
+    "title": "News Topics",
+    "subscribe": "Subscribe",
+    "unsubscribe": "Unsubscribe"
+  },
   "SignInScreen": {
     "signInButton": "Sign in",
     "note" : "Warning ! This app is only for people with access to Horarius.",
