@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Alert, ScrollView, ActivityIndicator, Button } from 'react-native';
+import { StyleSheet, Text, View, Alert, ScrollView, ActivityIndicator, Button, Image, TouchableOpacity } from 'react-native';
 import { I18n } from '../locales/i18n';
 import { Session } from '../BL/session';
 import { DegelClient } from '../BL/degelClient';
@@ -22,6 +22,7 @@ export default class NewsScreen extends React.Component {
     }
 
     this.onPress = this.onPress.bind(this);
+    this.readMore = this.readMore.bind(this);
   }
 
   async componentWillMount() {
@@ -53,6 +54,10 @@ export default class NewsScreen extends React.Component {
     this.refreshNewsFeed();
   }
 
+  async readMore(link) {
+    console.log("read link " + link)
+  }
+
   render() {
     if (this.state.appIsReady && this.state.newsList.length > 0) {
       // we got some news to display
@@ -60,13 +65,26 @@ export default class NewsScreen extends React.Component {
       for (const news of this.state.newsList) {
           const keyPrefix = uuidv4().toString().substring(0, 7);
           newsArray.push(
-           <View style={styles.news} key={keyPrefix + "-container"}>
-            <View style={styles.header}  key={keyPrefix + "-header"}>
-              <Text style={styles.title}  key={keyPrefix + "-title"}>{news.title}</Text>
-              <View style={styles.image}  key={keyPrefix + "-image"}/>
-            </View>
-            <Text  key={keyPrefix + "-desc"}>{news.description}</Text>
-           </View>
+            <TouchableOpacity key={keyPrefix + "-touch"} onPress={() => this.readMore(news.link)}>
+              <View style={styles.news} key={keyPrefix + "-container"}>
+                <View style={styles.header}  key={keyPrefix + "-header"}>
+                  <Text style={styles.title}  key={keyPrefix + "-title"}>{news.title}</Text>
+                  {news.imageUrl !== "" &&
+                    <Image style={styles.image}  key={keyPrefix + "-image"} source={{uri: news.imageUrl}}/>
+                  }
+                </View>
+                <Text  key={keyPrefix + "-desc"}>{news.description}</Text>
+                <View style={styles.readMore}>
+                  <Button
+                    key={keyPrefix + "-readmore"}
+                    onPress={() => this.readMore(news.link)}
+                    title={I18n.t('NewsScreen.readMoreButton')}
+                    color="#2F9B63"
+                    accessibilityLabel={I18n.t('NewsScreen.readMoreButton')}
+                  />
+                </View>
+             </View>
+           </TouchableOpacity>
           );
       }
       return (
@@ -153,6 +171,12 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     backgroundColor: 'steelblue'
+  },
+  readMore: {
+    marginTop: 10,
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-start'
   },
   infoView: {
     alignItems: 'center',

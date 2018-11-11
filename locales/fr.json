@@ -17,7 +17,8 @@
     "FooterInformation": "Ajoute ou enlève des abonnements à des sujets dans la page des paramètres.",
     "gettingReady": "Le fils de nouvelles se prépare.",
     "noNews": "Fil de nouvelles vide",
-    "refreshButton": "Rafraichir"
+    "refreshButton": "Rafraichir",
+    "readMoreButton": "Lire plus >"
   },
   "NewsTopic": {
     "title": "Sujets de Nouvelles",

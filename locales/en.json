@@ -17,7 +17,8 @@
     "FooterInformation": "Add or remove subscription topics in the settings page.",
     "gettingReady": "The newsfeed is getting ready.",
     "noNews": "Newsfeed empty",
-    "refreshButton": "Refresh Newsfeed"
+    "refreshButton": "Refresh Newsfeed",
+    "readMoreButton": "Read More >"
   },
   "NewsTopic": {
     "title": "News Topics",
