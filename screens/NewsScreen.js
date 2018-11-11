@@ -31,33 +31,25 @@ export default class NewsScreen extends React.Component {
   }
 
   render() {
+    const newsArray = [];
+    for (var i=0; i < 5; i++) {
+        newsArray.push(
+         <View style={styles.news} key={'news-' + i.toString()}>
+          <View style={styles.header}  key={'header-' + i.toString()}>
+            <Text style={styles.title}  key={'title-' + i.toString()}>Titre</Text>
+            <View style={styles.image}  key={'image-' + i.toString()}/>
+          </View>
+          <Text  key={'desc-' + i.toString()}>Description. Very long description, there is more to say because this is very long. Even longer than a long long long story.</Text>
+         </View>
+        );
+    }
     return (
       <ScrollView style={{
         flex: 1
       }}>
-       <View style={styles.news}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Titre</Text>
-          <View style={styles.image}/>
-        </View>
-        <Text>Description. Very long description, there is more to say because this is very long. Even longer than a long long long story.</Text>
-       </View>
-
-       <View style={styles.news}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Titre</Text>
-          <View style={styles.image}/>
-        </View>
-        <Text>Description. Very long description, there is more to say because this is very long. Even longer than a long long long story.</Text>
-       </View>
-
-       <View style={styles.news}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Titre</Text>
-          <View style={styles.image}/>
-        </View>
-        <Text>Description. Very long description, there is more to say because this is very long. Even longer than a long long long story.</Text>
-       </View>
+       {
+          newsArray
+       }
      </ScrollView>
     );
   }
