@@ -4,19 +4,24 @@ import {  StyleSheet,
           View,
           Alert,
           ScrollView,
+          RefreshControl,
           ActivityIndicator,
           Button,
           Image,
           TouchableOpacity,
-          WebView
+          WebView,
+          Platform
 } from 'react-native';
 import { I18n } from '../locales/i18n';
 import { Session } from '../BL/session';
 import { DegelClient } from '../BL/degelClient';
 import NewsTopics from '../components/NewsTopics';
 const uuidv4 = require('uuid/v4');
+import Icon from 'react-native-vector-icons/Entypo';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { withNavigationFocus } from 'react-navigation';
 
-export default class NewsScreen extends React.Component {
+class NewsScreen extends React.Component {
 
   static navigationOptions = ({ navigation }) => {
     const { params } = navigation.state;
@@ -29,12 +34,15 @@ export default class NewsScreen extends React.Component {
     this.state = {
       appIsReady: false,
       newsList: [],
-      readLink: undefined
+      readLink: undefined,
+      refreshing: false,
+      isFocused: true
     }
 
     this.onPress = this.onPress.bind(this);
     this.readMore = this.readMore.bind(this);
     this.goBack = this.goBack.bind(this);
+    this._onRefresh = this._onRefresh.bind(this);
   }
 
   async componentWillMount() {
@@ -79,33 +87,65 @@ export default class NewsScreen extends React.Component {
     })
   }
 
+  async _onRefresh() {
+    this.setState({
+      refreshing: true, 
+      readLink: undefined
+    });
+    await this.refreshNewsFeed();
+    this.setState({refreshing: false});
+  }
+
+  componentWillReceiveProps() {
+    this.setState({
+      isFocused: this.props.isFocused
+    });
+  }
+
   render() {
-    console.log(this.state.readLink)
+    const refreshScrollViewContent = [];
+
     if (this.state.readLink !== undefined) {
 
-      // reading mode
+      // reading mode - load webview
       return (
         <View style={{flex: 1}}>
-          <Button
-            onPress={this.goBack}
-            title='Go back'
-            color="#2F9B63"
-            accessibilityLabel='Go back'
-          />
+          <View style={styles.toolBarWebView}>
+            <TouchableOpacity onPress={this.goBack}>
+              <Ionicons
+                style={{marginLeft:'8%', ...Platform.select({android: {marginTop: 2.5}})}}
+                name={Platform.OS === 'ios' ? `ios-arrow-back` : 'md-arrow-back'}
+                size={Platform.OS === 'ios' ? 35 : 30}
+                color="#000000"
+                onPress={this.goBack}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={this.goBack}>
+              <Icon
+                style={{marginRight:'8%'}}
+                name="cross"
+                size={35}
+                color="#000000"
+                onPress={this.goBack}
+              />
+            </TouchableOpacity>
+          </View>
           <WebView
-            source={{uri: this.state.link }}
-            style={{marginTop: 20, flex: 1}}
+            source={{uri: this.state.readLink}}
+            style={{flex: 1}}
+            javaScriptEnabled={true}
+            domStorageEnabled={true}
+            startInLoadingState={true}
           />
-        </View>
-      );
+      </View>
+    );
     }
 
     if (this.state.appIsReady && this.state.newsList.length > 0) {
       // we got some news to display
-      const newsArray = [];
       for (const news of this.state.newsList) {
           const keyPrefix = uuidv4().toString().substring(0, 7);
-          newsArray.push(
+          refreshScrollViewContent.push(
             <TouchableOpacity key={keyPrefix + "-touch"} onPress={() => this.readMore(news.link)}>
               <View style={styles.news} key={keyPrefix + "-container"}>
                 <View style={styles.header}  key={keyPrefix + "-header"}>
@@ -128,34 +168,29 @@ export default class NewsScreen extends React.Component {
            </TouchableOpacity>
           );
       }
-      return (
-        <ScrollView style={{
-          flex: 1
-        }}>
-         {
-            newsArray
-         }
-         <View style={styles.infoView}>
-          <Text style={styles.infoText}>{I18n.t('NewsScreen.FooterInformation')}</Text>
-         </View>
-       </ScrollView>
+
+      const keyPrefix = uuidv4().toString().substring(0, 7);
+      // fill the scrollview content
+      refreshScrollViewContent.push(
+        <View style={styles.infoView} key={keyPrefix + "view"}>
+          <Text style={styles.infoText} key={keyPrefix + "text"}>{I18n.t('NewsScreen.FooterInformation')}</Text>
+        </View>
       );
     } else if (this.state.appIsReady) {
-      return(
-        <ScrollView style={{
-          flex: 1
-        }}>
-          <View style={noNewsStyle.container}>
-            <Text style={styles.title}>{I18n.t('NewsScreen.noNews')}</Text>
-            <NewsTopics/>
+      // fill refreshScrollViewContent with NewsTopics component
+      const keyPrefix = uuidv4().toString().substring(0, 7);
+      refreshScrollViewContent.push(
+          <View style={noNewsStyle.container} key={keyPrefix + "-container"}>
+            <Text style={styles.title} key={keyPrefix + "-text"}>{I18n.t('NewsScreen.noNews')}</Text>
+            <NewsTopics key={keyPrefix + "-newsTopics-" + this.state.isFocused}/>
             <Button
+              key={keyPrefix + "-button"}
               onPress={this.onPress}
               title={I18n.t('NewsScreen.refreshButton')}
               color="#2F9B63"
               accessibilityLabel={I18n.t('NewsScreen.refreshButton')}
             />
           </View>
-        </ScrollView>
       );
     }
     else {
@@ -166,7 +201,23 @@ export default class NewsScreen extends React.Component {
         </View>
       );
     }
-    
+
+    // return refreshScrollView
+    return(
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this._onRefresh}
+          />
+        }
+        style={{flex: 1}}
+      >
+        {
+          refreshScrollViewContent
+        }
+      </ScrollView>
+    );
   }
 }
 
@@ -225,5 +276,14 @@ const styles = StyleSheet.create({
   },
   infoText: {
     fontSize: 12
+  },
+  toolBarWebView: {
+    paddingLeft: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#fbfbfb',
+    paddingVertical: 5
   }
 });
+
+export default withNavigationFocus(NewsScreen);
