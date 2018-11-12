@@ -28,7 +28,7 @@
       "bundleIdentifier" : "ca.usherbrooke.gel.de"
     },
     "android" : {
-      "versionCode" : 5,
+      "versionCode" : 7,
       "package" : "ca.usherbrooke.gel.de",
       "permissions" : []
     }
