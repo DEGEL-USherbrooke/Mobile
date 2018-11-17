@@ -1,0 +1,11 @@
+sudo: false
+before_install:
+  - npm i -g npm@6.1.0
+cache: npm
+language: node_js
+node_js:
+  - "10.5.0"
+branches:
+  only:
+  - master
+  - stable
