@@ -5,8 +5,10 @@ import { I18n } from '../locales/i18n';
 import { Session } from '../BL/session';
 import { DegelClient } from '../BL/degelClient';
 import { NetInfo } from 'react-native';
+import NewsTopics from '../components/NewsTopics';
+import { withNavigationFocus } from 'react-navigation';
 
-export default class SettingsScreen extends React.Component {
+class SettingsScreen extends React.Component {
 
   static navigationOptions = ({ navigation }) => {
     const { params } = navigation.state;
@@ -36,6 +38,12 @@ export default class SettingsScreen extends React.Component {
     NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectionChange);
   }
 
+  componentWillReceiveProps() {
+    this.setState({
+      isFocused: this.props.isFocused
+    });
+  }
+
   constructor() {
     super();
     this.onNotificationValueChange = this.onNotificationValueChange.bind(this);
@@ -43,7 +51,8 @@ export default class SettingsScreen extends React.Component {
       switchCalendarValue: false,
       switchNotificationValue: false,
       appIsReady: false,
-      connectionStatus: false
+      connectionStatus: false,
+      isFocused: true
     };
   }
 
@@ -78,6 +87,7 @@ export default class SettingsScreen extends React.Component {
             titleStyle={{color:'grey', textAlign: 'center', fontSize: 12}}
             hasNavArrow={false}
           />
+          <NewsTopics key={this.state.isFocused + "-name"}/>
         </SettingsList>
       </View>
     );
@@ -113,3 +123,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+export default withNavigationFocus(SettingsScreen);

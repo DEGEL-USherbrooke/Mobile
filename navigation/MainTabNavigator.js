@@ -6,6 +6,7 @@ import TabBarIcon from '../components/TabBarIcon';
 
 import CalendarScreen from '../screens/CalendarScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import NewsScreen from '../screens/NewsScreen';
 
 const CalendarStack = createStackNavigator({
   Home: CalendarScreen,
@@ -21,6 +22,23 @@ CalendarStack.navigationOptions = {
           ? `ios-calendar${focused ? '' : '-outline'}`
           : 'md-calendar'
       }
+    />
+  ),
+  tabBarOptions: {
+    showLabel: false
+  }
+};
+
+const NewsStack = createStackNavigator({
+  Home: NewsScreen,
+});
+
+NewsStack.navigationOptions = {
+    tabBarLabel: "Bouton vers les nouvelles.",
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === 'ios' ? `ios-paper${focused ? '' : '-outline'}` : 'md-paper'}
     />
   ),
   tabBarOptions: {
@@ -47,5 +65,6 @@ SettingsStack.navigationOptions = {
 
 export default createBottomTabNavigator({
   CalendarStack,
+  NewsStack,
   SettingsStack,
 });

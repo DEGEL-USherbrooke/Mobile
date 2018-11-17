@@ -136,7 +136,7 @@ describe('DegelClient fetch-vcr', () => {
 
     settingsStatus = await DegelClient.getSettingsStatus();
 
-    expect(settingsStatus).toEqual({ notification: false });
+    expect(settingsStatus).toEqual({"feeds": [], notification: false });
     expect(consoleSpy).toHaveBeenCalledTimes(2);
   });
 
@@ -151,7 +151,7 @@ describe('DegelClient fetch-vcr', () => {
 
     settingsStatus = await DegelClient.getSettingsStatus();
 
-    expect(settingsStatus).toEqual({ notification: false });
+    expect(settingsStatus).toEqual({"feeds": [], notification: false });
     expect(consoleSpy).toHaveBeenCalledTimes(3);
   });
 
