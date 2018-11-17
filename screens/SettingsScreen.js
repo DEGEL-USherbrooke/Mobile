@@ -60,8 +60,8 @@ class SettingsScreen extends React.Component {
     var bgColor = '#DCE3F4';
     return (
       <View style={{backgroundColor:'#EFEFF4',flex:1}}>
+        <NewsTopics key={this.state.isFocused + "-name"}/>
         <SettingsList borderColor='#c8c7cc' defaultItemSize={50}>
-        <SettingsList.Header headerStyle={{marginTop:0}}/>
           <SettingsList.Item
             title={I18n.t('SettingsScreen.settingsNotification')}
             titleInfo=''
@@ -87,7 +87,6 @@ class SettingsScreen extends React.Component {
             titleStyle={{color:'grey', textAlign: 'center', fontSize: 12}}
             hasNavArrow={false}
           />
-          <NewsTopics key={this.state.isFocused + "-name"}/>
         </SettingsList>
       </View>
     );
