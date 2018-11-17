@@ -89,7 +89,7 @@ class NewsScreen extends React.Component {
 
   async _onRefresh() {
     this.setState({
-      refreshing: true, 
+      refreshing: true,
       readLink: undefined
     });
     await this.refreshNewsFeed();
@@ -146,27 +146,27 @@ class NewsScreen extends React.Component {
       for (const news of this.state.newsList) {
           const keyPrefix = uuidv4().toString().substring(0, 7);
           refreshScrollViewContent.push(
-            <TouchableOpacity key={keyPrefix + "-touch"} onPress={() => this.readMore(news.link)}>
-              <View style={styles.news} key={keyPrefix + "-container"}>
-                <View style={styles.header}  key={keyPrefix + "-header"}>
-                  <Text style={styles.title}  key={keyPrefix + "-title"}>{news.title}</Text>
-                  {news.imageUrl !== "" &&
-                    <Image style={styles.image}  key={keyPrefix + "-image"} source={{uri: news.imageUrl}}/>
-                  }
-                </View>
-                <Text  key={keyPrefix + "-desc"}>{news.description}</Text>
-                <View style={styles.readMore}>
-                  <Button
-                    key={keyPrefix + "-readmore"}
-                    onPress={() => this.readMore(news.link)}
-                    title={I18n.t('NewsScreen.readMoreButton')}
-                    color="#2F9B63"
-                    accessibilityLabel={I18n.t('NewsScreen.readMoreButton')}
-                  />
-                </View>
-             </View>
-           </TouchableOpacity>
-          );
+              <TouchableOpacity key={keyPrefix + "-touch"} onPress={() => this.readMore(news.link)}>
+                <View style={styles.news} key={keyPrefix + "-container"}>
+                  <View style={styles.header}  key={keyPrefix + "-header"}>
+                    <Text style={styles.title}  key={keyPrefix + "-title"}>{news.title}</Text>
+                    {news.imageUrl !== "" &&
+                      <Image style={styles.image}  key={keyPrefix + "-image"} source={{uri: news.imageUrl}}/>
+                    }
+                  </View>
+                  <Text  key={keyPrefix + "-desc"}>{news.description}</Text>
+                  <View style={styles.readMore}>
+                    <Button
+                      key={keyPrefix + "-readmore"}
+                      onPress={() => this.readMore(news.link)}
+                      title={I18n.t('NewsScreen.readMoreButton')}
+                      color="#2F9B63"
+                      accessibilityLabel={I18n.t('NewsScreen.readMoreButton')}
+                    />
+                  </View>
+               </View>
+             </TouchableOpacity>
+        );
       }
 
       const keyPrefix = uuidv4().toString().substring(0, 7);
@@ -245,7 +245,9 @@ const styles = StyleSheet.create({
   news: {
     backgroundColor: '#fff',
     margin: 10,
-    padding: 20
+    padding: 20,
+    elevation: 5,
+    borderRadius:5
   },
   header: {
     flex: 1,
