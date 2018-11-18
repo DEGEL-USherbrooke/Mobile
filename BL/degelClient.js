@@ -117,8 +117,6 @@ class DegelClient {
 
     newsList = await this.authorizedFetch(BASE_URL + "/api/user/" + Session._id + "/news", 'GET')
 
-    console.log(newsList)
-
     if (newsList.error == undefined) {
       return newsList;
     }
@@ -157,7 +155,6 @@ class DegelClient {
       JSON.stringify(settingsState)
     );
 
-    console.log(response);
   }
 
   static async getSettingsStatus() {
@@ -242,8 +239,8 @@ class DegelClient {
 
   static async setCalendarToken(calendarToken) {
     return await this.authorizedFetch(
-      BASE_URL + '/api/user/' + Session._id + '/calendar/key', 
-      'POST', 
+      BASE_URL + '/api/user/' + Session._id + '/calendar/key',
+      'POST',
       JSON.stringify({value: calendarToken})
     );
   }

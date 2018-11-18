@@ -62,8 +62,6 @@ class NewsScreen extends React.Component {
   async refreshNewsFeed() {
     newsList = await DegelClient.getUserNews();
 
-    console.log(newsList);
-
     this.setState({
       appIsReady: true, // fix I18n https://github.com/xcarpentier/ex-react-native-i18n/issues/7
       newsList: newsList
