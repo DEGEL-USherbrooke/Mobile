@@ -172,8 +172,10 @@ export default class SignInScreen extends React.Component {
 
 
   handleBackPress = () => {
-    this.webview.goBack();
-    return true;
+    if(!this.state.displayPanel){
+      this.webview.goBack();
+      return true;
+    }
   }
 
   handleConnectionChange = (isConnected) => {
