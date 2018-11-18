@@ -107,7 +107,7 @@ class NewsScreen extends React.Component {
     const refreshScrollViewContent = [];
 
     if (this.state.readLink !== undefined) {
-      this.props.navigation.setParams({header: {visible:false}});
+
       // reading mode - load webview
       return (
         <View style={{flex: 1}}>
