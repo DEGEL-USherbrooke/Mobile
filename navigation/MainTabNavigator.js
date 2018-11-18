@@ -34,7 +34,7 @@ const NewsStack = createStackNavigator({
 });
 
 NewsStack.navigationOptions = {
-    tabBarLabel: "Bouton vers les nouvelles.",
+    tabBarLabel: "Bouton vers l'écran des les nouvelles.",
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}

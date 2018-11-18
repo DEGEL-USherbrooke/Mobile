@@ -9,6 +9,7 @@ import {  StyleSheet,
           Button,
           Image,
           TouchableOpacity,
+          BackHandler,
           WebView,
           Platform
 } from 'react-native';
@@ -48,21 +49,21 @@ class NewsScreen extends React.Component {
   async componentWillMount() {
     await I18n.initAsync();
 
-    this.props.navigation.setParams({title: I18n.t('NewsScreen.title') });
+    this.props.navigation.setParams({title: I18n.t('NewsScreen.title')});
 
     this.refreshNewsFeed();
   }
 
   componentDidMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
   }
 
   componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
   }
 
   async refreshNewsFeed() {
     newsList = await DegelClient.getUserNews();
-
-    console.log(newsList);
 
     this.setState({
       appIsReady: true, // fix I18n https://github.com/xcarpentier/ex-react-native-i18n/issues/7
@@ -89,7 +90,7 @@ class NewsScreen extends React.Component {
 
   async _onRefresh() {
     this.setState({
-      refreshing: true, 
+      refreshing: true,
       readLink: undefined
     });
     await this.refreshNewsFeed();
@@ -111,26 +112,23 @@ class NewsScreen extends React.Component {
       return (
         <View style={{flex: 1}}>
           <View style={styles.toolBarWebView}>
-            <TouchableOpacity onPress={this.goBack}>
-              <Ionicons
-                style={{marginLeft:'8%', ...Platform.select({android: {marginTop: 2.5}})}}
-                name={Platform.OS === 'ios' ? `ios-arrow-back` : 'md-arrow-back'}
-                size={Platform.OS === 'ios' ? 35 : 30}
-                color="#000000"
-                onPress={this.goBack}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={this.goBack}>
-              <Icon
-                style={{marginRight:'8%'}}
-                name="cross"
-                size={35}
-                color="#000000"
-                onPress={this.goBack}
-              />
-            </TouchableOpacity>
+            <Ionicons
+              style={{marginLeft:'8%', ...Platform.select({android: {marginTop: 2.5}})}}
+              name={Platform.OS === 'ios' ? `ios-arrow-back` : 'md-arrow-back'}
+              size={Platform.OS === 'ios' ? 35 : 30}
+              color="#000000"
+              onPress={this.handleBackPress}
+            />
+            <Icon
+              style={{marginRight:'8%'}}
+              name="cross"
+              size={35}
+              color="#000000"
+              onPress={this.goBack}
+            />
           </View>
           <WebView
+            ref={r => this.webview = r}
             source={{uri: this.state.readLink}}
             style={{flex: 1}}
             javaScriptEnabled={true}
@@ -146,27 +144,27 @@ class NewsScreen extends React.Component {
       for (const news of this.state.newsList) {
           const keyPrefix = uuidv4().toString().substring(0, 7);
           refreshScrollViewContent.push(
-            <TouchableOpacity key={keyPrefix + "-touch"} onPress={() => this.readMore(news.link)}>
-              <View style={styles.news} key={keyPrefix + "-container"}>
-                <View style={styles.header}  key={keyPrefix + "-header"}>
-                  <Text style={styles.title}  key={keyPrefix + "-title"}>{news.title}</Text>
-                  {news.imageUrl !== "" &&
-                    <Image style={styles.image}  key={keyPrefix + "-image"} source={{uri: news.imageUrl}}/>
-                  }
-                </View>
-                <Text  key={keyPrefix + "-desc"}>{news.description}</Text>
-                <View style={styles.readMore}>
-                  <Button
-                    key={keyPrefix + "-readmore"}
-                    onPress={() => this.readMore(news.link)}
-                    title={I18n.t('NewsScreen.readMoreButton')}
-                    color="#2F9B63"
-                    accessibilityLabel={I18n.t('NewsScreen.readMoreButton')}
-                  />
-                </View>
-             </View>
-           </TouchableOpacity>
-          );
+              <TouchableOpacity key={keyPrefix + "-touch"} onPress={() => this.readMore(news.link)}>
+                <View style={styles.news} key={keyPrefix + "-container"}>
+                  <View style={styles.header}  key={keyPrefix + "-header"}>
+                    <Text style={styles.title}  key={keyPrefix + "-title"}>{news.title}</Text>
+                    {news.imageUrl !== "" &&
+                      <Image style={styles.image}  key={keyPrefix + "-image"} source={{uri: news.imageUrl}}/>
+                    }
+                  </View>
+                  <Text  key={keyPrefix + "-desc"}>{news.description}</Text>
+                  <View style={styles.readMore}>
+                    <Button
+                      key={keyPrefix + "-readmore"}
+                      onPress={() => this.readMore(news.link)}
+                      title={I18n.t('NewsScreen.readMoreButton')}
+                      color="#2F9B63"
+                      accessibilityLabel={I18n.t('NewsScreen.readMoreButton')}
+                    />
+                  </View>
+               </View>
+             </TouchableOpacity>
+        );
       }
 
       const keyPrefix = uuidv4().toString().substring(0, 7);
@@ -219,6 +217,13 @@ class NewsScreen extends React.Component {
       </ScrollView>
     );
   }
+
+  handleBackPress = () => {
+    if(this.state.readLink){
+      this.webview.goBack();
+      return true;
+    }
+  }
 }
 
 const noNewsStyle = StyleSheet.create({
@@ -245,7 +250,9 @@ const styles = StyleSheet.create({
   news: {
     backgroundColor: '#fff',
     margin: 10,
-    padding: 20
+    padding: 20,
+    elevation: 5,
+    borderRadius:5
   },
   header: {
     flex: 1,

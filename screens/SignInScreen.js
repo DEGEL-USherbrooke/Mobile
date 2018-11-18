@@ -22,9 +22,6 @@ import { DegelClient } from '../BL/degelClient';
 import { I18n } from '../locales/i18n';
 
 export default class SignInScreen extends React.Component {
-  static navigationOptions = {
-    title: 'Please sign in',
-  };
 
   async componentWillMount() {
     await I18n.initAsync();
