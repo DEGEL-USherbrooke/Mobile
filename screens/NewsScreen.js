@@ -9,6 +9,7 @@ import {  StyleSheet,
           Button,
           Image,
           TouchableOpacity,
+          BackHandler,
           WebView,
           Platform
 } from 'react-native';
@@ -48,15 +49,17 @@ class NewsScreen extends React.Component {
   async componentWillMount() {
     await I18n.initAsync();
 
-    this.props.navigation.setParams({title: I18n.t('NewsScreen.title') });
+    this.props.navigation.setParams({title: I18n.t('NewsScreen.title')});
 
     this.refreshNewsFeed();
   }
 
   componentDidMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
   }
 
   componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
   }
 
   async refreshNewsFeed() {
@@ -104,31 +107,28 @@ class NewsScreen extends React.Component {
     const refreshScrollViewContent = [];
 
     if (this.state.readLink !== undefined) {
-
+      this.props.navigation.setParams({header: {visible:false}});
       // reading mode - load webview
       return (
         <View style={{flex: 1}}>
           <View style={styles.toolBarWebView}>
-            <TouchableOpacity onPress={this.goBack}>
-              <Ionicons
-                style={{marginLeft:'8%', ...Platform.select({android: {marginTop: 2.5}})}}
-                name={Platform.OS === 'ios' ? `ios-arrow-back` : 'md-arrow-back'}
-                size={Platform.OS === 'ios' ? 35 : 30}
-                color="#000000"
-                onPress={this.goBack}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={this.goBack}>
-              <Icon
-                style={{marginRight:'8%'}}
-                name="cross"
-                size={35}
-                color="#000000"
-                onPress={this.goBack}
-              />
-            </TouchableOpacity>
+            <Ionicons
+              style={{marginLeft:'8%', ...Platform.select({android: {marginTop: 2.5}})}}
+              name={Platform.OS === 'ios' ? `ios-arrow-back` : 'md-arrow-back'}
+              size={Platform.OS === 'ios' ? 35 : 30}
+              color="#000000"
+              onPress={this.handleBackPress}
+            />
+            <Icon
+              style={{marginRight:'8%'}}
+              name="cross"
+              size={35}
+              color="#000000"
+              onPress={this.goBack}
+            />
           </View>
           <WebView
+            ref={r => this.webview = r}
             source={{uri: this.state.readLink}}
             style={{flex: 1}}
             javaScriptEnabled={true}
@@ -216,6 +216,13 @@ class NewsScreen extends React.Component {
         }
       </ScrollView>
     );
+  }
+
+  handleBackPress = () => {
+    if(this.state.readLink){
+      this.webview.goBack();
+      return true;
+    }
   }
 }
 
