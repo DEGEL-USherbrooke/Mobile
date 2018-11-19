@@ -225,10 +225,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: 10,
     marginRight: 10,
-    marginTop: 12,
-    marginBottom: 4,
-    elevation: 2,
-    borderRadius: 2
+    marginTop: 17,
+    borderRadius: 3
   },
   hoursLocationContainer: {
     backgroundColor: 'white',
