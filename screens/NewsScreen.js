@@ -8,7 +8,7 @@ import {  StyleSheet,
           ActivityIndicator,
           Button,
           Image,
-          TouchableOpacity,
+          TouchableWithoutFeedback,
           BackHandler,
           WebView,
           Platform
@@ -154,7 +154,7 @@ class NewsScreen extends React.Component {
       for (const news of this.state.newsList) {
           const keyPrefix = uuidv4().toString().substring(0, 7);
           refreshScrollViewContent.push(
-              <TouchableOpacity key={keyPrefix + "-touch"} onPress={() => this.readMore(news.link)}>
+              <TouchableWithoutFeedback key={keyPrefix + "-touch"} onPress={() => this.readMore(news.link)}>
                 <View style={styles.news} key={keyPrefix + "-container"}>
                   <View style={styles.header}  key={keyPrefix + "-header"}>
                     <Text style={styles.title}  key={keyPrefix + "-title"}>{news.title}</Text>
@@ -173,7 +173,7 @@ class NewsScreen extends React.Component {
                     />
                   </View>
                </View>
-             </TouchableOpacity>
+             </TouchableWithoutFeedback>
         );
       }
 
