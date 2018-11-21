@@ -45,4 +45,4 @@ https://docs.expo.io/versions/v27.0.0/distribution/index.html
 
 ### Processus de publication de l'application dans les App Stores
 
-Suivre les instructions dans `Google Drive -> Projet E18\Documentation\Comment publier dans les App Store.md`
+Suivre les instructions dans `Google Drive -> Projet E18\Documentation\Comment publier dans les App Store.gdoc`
