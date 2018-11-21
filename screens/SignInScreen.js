@@ -22,9 +22,6 @@ import { DegelClient } from '../BL/degelClient';
 import { I18n } from '../locales/i18n';
 
 export default class SignInScreen extends React.Component {
-  static navigationOptions = {
-    title: 'Please sign in',
-  };
 
   async componentWillMount() {
     await I18n.initAsync();
@@ -172,8 +169,10 @@ export default class SignInScreen extends React.Component {
 
 
   handleBackPress = () => {
-    this.webview.goBack();
-    return true;
+    if(!this.state.displayPanel){
+      this.webview.goBack();
+      return true;
+    }
   }
 
   handleConnectionChange = (isConnected) => {
@@ -241,7 +240,7 @@ const styles = StyleSheet.create({
         shadowRadius: 3,
       },
       android: {
-        elevation: 20,
+        elevation: 5
       },
     }),
     flexDirection: 'row',
