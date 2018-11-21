@@ -24,7 +24,7 @@
 * sur Android : scanner le code-barres et attendre (easy life)
 * sur iphone : dans un autre terminal dans le dossier `degel-mobile` exécutez `exp send -s 9991112222`
 
-# Documentation avec expo
+# Documentation expo
 
 ## Introduction expo
 https://expo.io/learn
@@ -40,3 +40,9 @@ https://docs.expo.io/versions/v27.0.0/introduction/project-lifecycle.html#publis
 
 ## Distribution de l'application sur les App Stores
 https://docs.expo.io/versions/v27.0.0/distribution/index.html
+
+# Documentation Interne
+
+### Processus de publication de l'application dans les App Stores
+
+Suivre les instructions dans `Google Drive -> Projet E18\Documentation\Comment publier dans les App Store.md`
