@@ -37,7 +37,8 @@ class NewsScreen extends React.Component {
       newsList: [],
       readLink: undefined,
       refreshing: false,
-      isFocused: true
+      isFocused: true,
+      backButtonColor: "#d3d3d3"
     }
 
     this.onPress = this.onPress.bind(this);
@@ -88,6 +89,14 @@ class NewsScreen extends React.Component {
     })
   }
 
+  _navChanged = (navState) => {
+    ressource_uri = navState.url.replace(/(^\w+:|^)\/\//, '');
+    original_uri = this.state.readLink.replace(/(^\w+:|^)\/\//, '');
+    this.setState({
+      backButtonColor: (original_uri === ressource_uri) ? "#d3d3d3" : "#000000"
+    });
+  }
+
   async _onRefresh() {
     this.setState({
       refreshing: true,
@@ -116,7 +125,7 @@ class NewsScreen extends React.Component {
               style={{marginLeft:'8%', ...Platform.select({android: {marginTop: 2.5}})}}
               name={Platform.OS === 'ios' ? `ios-arrow-back` : 'md-arrow-back'}
               size={Platform.OS === 'ios' ? 35 : 30}
-              color="#000000"
+              color={this.state.backButtonColor}
               onPress={this.handleBackPress}
             />
             <Icon
@@ -134,6 +143,7 @@ class NewsScreen extends React.Component {
             javaScriptEnabled={true}
             domStorageEnabled={true}
             startInLoadingState={true}
+            onNavigationStateChange={ this._navChanged }
           />
       </View>
     );
